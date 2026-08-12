@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Asset;
 use App\Models\DamageReport;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

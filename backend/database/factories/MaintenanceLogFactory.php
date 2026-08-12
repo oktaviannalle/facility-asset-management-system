@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Asset;
 use App\Models\MaintenanceLog;
+use App\Models\MaintenanceSchedule;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

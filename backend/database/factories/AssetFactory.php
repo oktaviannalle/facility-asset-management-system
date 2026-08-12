@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Asset;
+use App\Models\AssetCategory;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AssetFactory extends Factory
