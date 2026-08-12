@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MaintenanceLog extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['asset_id', 'schedule_id', 'technician_id', 'action_taken', 'cost', 'maintenance_date'];
 
     protected $casts = ['maintenance_date' => 'date', 'cost' => 'decimal:2'];

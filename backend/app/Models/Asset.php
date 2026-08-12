@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Asset extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'asset_code', 'name', 'category_id', 'location_id',
         'condition', 'purchase_date', 'purchase_price', 'qr_code_path',

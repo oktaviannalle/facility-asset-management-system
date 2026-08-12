@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MaintenanceSchedule extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['asset_id', 'maintenance_type', 'frequency_months', 'next_due_date'];
 
     protected $casts = ['next_due_date' => 'date'];
