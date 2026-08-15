@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import ScanFrame from '../components/ui/ScanFrame';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -9,6 +8,7 @@ function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -27,52 +27,107 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4 relative overflow-hidden">
-      {/* Background Decorative Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="flex min-h-screen w-full bg-slate-100 font-sans">
+      {/* Split-Screen Left Side: FTI UKSW Building Photo (Figma Style) */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
+        <img
+          src="/fti_building.jpg"
+          alt="Gedung FTI UKSW"
+          className="absolute inset-0 h-full w-full object-cover object-center transform scale-105 transition-transform duration-1000"
+        />
+        {/* Navy Dark Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-blue-950/40" />
 
-      <ScanFrame className="w-full max-w-md z-10">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/95 p-8 text-white shadow-2xl backdrop-blur-xl">
-          {/* Header Logo FTI UKSW */}
-          <div className="flex items-center gap-3 mb-4">
-            <img src="/ftiuksw.png" alt="Logo FTI UKSW" className="h-12 w-12 object-contain shrink-0" />
+        {/* Content on Image Overlay */}
+        <div className="relative z-10 flex flex-col justify-between p-12 text-white h-full">
+          {/* Top Brand Tag */}
+          <div className="flex items-center gap-3">
+            <img src="/ftiuksw.png" alt="Logo FTI UKSW" className="h-12 w-12 object-contain bg-white/10 p-1.5 rounded-full backdrop-blur-md border border-white/20" />
             <div>
-              <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-blue-400 block">
-                FTI UKSW / SARPRAS
+              <span className="font-display font-black tracking-wider text-xl text-white block">
+                FTI UKSW
               </span>
-              <h1 className="font-display text-xl font-bold tracking-tight text-white leading-tight">
-                Sistem Manajemen Aset
-              </h1>
+              <span className="text-xs text-blue-200 block font-medium">
+                Fakultas Teknologi Informasi
+              </span>
             </div>
           </div>
 
-          <p className="mt-2 text-xs leading-relaxed text-slate-300 bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/60">
-            Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
-          </p>
+          {/* Bottom Hero Caption */}
+          <div className="space-y-3 max-w-lg mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-3.5 py-1 text-xs font-mono font-semibold text-blue-300 border border-blue-400/30 backdrop-blur-md">
+              <span>SISTEM MANAJEMEN ASET</span>
+            </div>
+            <h2 className="font-display text-3xl font-bold tracking-tight text-white leading-tight">
+              Pencatatan & Pemantauan Aset Terintegrasi FTI UKSW
+            </h2>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Mewujudkan kelancaran operasional sarana dan prasarana kampus melalui pengelolaan inventaris yang transparan, presisi, dan real-time.
+            </p>
+          </div>
+        </div>
+      </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      {/* Split-Screen Right Side: Login Form Panel */}
+      <div className="flex flex-1 items-center justify-center p-6 sm:p-12 lg:w-1/2 bg-white">
+        <div className="w-full max-w-md space-y-8">
+          {/* Header Logo & SIMAFTI Branding */}
+          <div className="text-center">
+            <img
+              src="/ftiuksw.png"
+              alt="Logo FTI UKSW"
+              className="mx-auto h-20 w-20 object-contain mb-3 drop-shadow-md"
+            />
+            <h1 className="font-display text-3xl font-black tracking-tight text-slate-900">
+              SIMAFTI
+            </h1>
+            <p className="text-xs font-mono font-bold text-blue-900 tracking-wider uppercase mt-0.5">
+              SIM MANAJEMEN ASET TIK
+            </p>
+            <p className="mt-3 text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
+              Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
+            </p>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <Input
-              label="Email"
+              label="Username / Email"
               type="email"
               required
-              dark
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="nama@sarpras.test"
-            />
-            <Input
-              label="Kata Sandi"
-              type="password"
-              required
-              dark
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              placeholder="••••••••"
+              placeholder="Username or Email"
             />
 
+            <Input
+              label="Password"
+              type="password"
+              required
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              placeholder="Input your password account"
+            />
+
+            {/* Remember Me & Forgot Password Helper */}
+            <div className="flex items-center justify-between text-xs">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="rounded border-slate-300 text-blue-900 focus:ring-blue-800 h-4 w-4 cursor-pointer"
+                />
+                <span>Remember me</span>
+              </label>
+              <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Silakan hubungi administrator SIMAFTI FTI UKSW untuk reset kata sandi.'); }} className="text-slate-500 hover:text-blue-900 hover:underline font-medium">
+                Forgot Password?
+              </a>
+            </div>
+
             {error && (
-              <div className="rounded-lg bg-red-950/60 border border-red-800/80 p-3 text-xs text-red-200 flex items-center gap-2">
-                <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="rounded-xl bg-red-50 border border-red-200 p-3.5 text-xs text-red-700 flex items-center gap-2.5">
+                <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>{error}</span>
@@ -81,14 +136,21 @@ function Login() {
 
             <Button
               type="submit"
-              className="w-full py-3 text-sm font-semibold shadow-lg shadow-blue-600/30 mt-2"
+              className="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl shadow-lg shadow-blue-950/20 text-sm transition-all cursor-pointer"
               loading={submitting}
             >
-              {submitting ? 'Memeriksa...' : 'Masuk ke Sistem'}
+              {submitting ? 'Logging in...' : 'Login'}
             </Button>
           </form>
+
+          {/* Footer Copyright */}
+          <div className="text-center pt-4 border-t border-slate-100">
+            <p className="text-[11px] text-slate-400 font-medium">
+              Fakultas Teknologi Informasi — Universitas Kristen Satya Wacana © 2026
+            </p>
+          </div>
         </div>
-      </ScanFrame>
+      </div>
     </div>
   );
 }

@@ -109,7 +109,7 @@ function AdminLayout() {
         <div className="flex items-center gap-2.5">
           <img src="/ftiuksw.png" alt="Logo FTI UKSW" className="h-8 w-8 object-contain" />
           <div>
-            <span className="font-display font-bold text-sm tracking-tight block">SIMATIK</span>
+            <span className="font-display font-bold text-sm tracking-tight block">SIMAFTI</span>
             <span className="text-[10px] text-slate-400 block -mt-1">FTI UKSW</span>
           </div>
         </div>
@@ -135,7 +135,7 @@ function AdminLayout() {
         />
       )}
 
-      {/* Sidebar Layout - Styled after Figma SIMATIK */}
+      {/* Sidebar Layout - Styled after Figma SIMAFTI */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-white border-r border-slate-200/90 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -146,7 +146,7 @@ function AdminLayout() {
           <img src="/ftiuksw.png" alt="Logo FTI UKSW" className="h-10 w-10 object-contain shrink-0" />
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-display text-lg font-black tracking-tight text-slate-900">SIMATIK</span>
+              <span className="font-display text-lg font-black tracking-tight text-slate-900">SIMAFTI</span>
               <span className="rounded-md bg-blue-100 px-1.5 py-0.2 text-[10px] font-mono font-bold text-blue-800">
                 FTI
               </span>
@@ -173,7 +173,7 @@ function AdminLayout() {
                   className={({ isActive }) =>
                     `flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-150 ${
                       isActive
-                        ? 'bg-blue-600 text-white shadow-sm font-bold'
+                        ? 'bg-blue-900 text-white shadow-sm font-bold'
                         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`
                   }
@@ -217,7 +217,7 @@ function AdminLayout() {
         <header className="hidden lg:flex h-16 items-center justify-between border-b border-slate-200/90 bg-white px-8 shadow-xs">
           <div>
             <h3 className="text-xs font-bold text-slate-800 tracking-wide">
-              SIMATIK — Sistem Informasi Manajemen Aset TIK
+              SIMAFTI — Sistem Informasi Manajemen Aset FTI UKSW
             </h3>
             <p className="text-[11px] text-slate-500">
               Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
@@ -230,7 +230,7 @@ function AdminLayout() {
               <input
                 type="text"
                 placeholder="Cari data aset..."
-                className="w-64 rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 transition-all"
+                className="w-64 rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:border-blue-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-900 transition-all"
               />
               <svg className="absolute left-3 top-2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

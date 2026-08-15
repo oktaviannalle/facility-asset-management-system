@@ -69,14 +69,14 @@ function Dashboard() {
       {/* Subtitle Banner */}
       <div className="flex flex-col gap-1 border-b border-slate-200 pb-4">
         <h1 className="font-display text-xl font-extrabold text-slate-900 tracking-tight">
-          Dashboard Manajemen Aset TIK
+          Dashboard Manajemen Aset (SIMAFTI)
         </h1>
         <p className="text-xs text-slate-500">
           Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
         </p>
       </div>
 
-      {/* 3 Metric Cards matching Figma SIMATIK Style */}
+      {/* 3 Metric Cards matching Figma SIMAFTI Style */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         {/* Card 1: Semua Aset */}
         <Card className="overflow-hidden p-0 border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
@@ -90,12 +90,12 @@ function Dashboard() {
               Semua Aset
             </span>
           </div>
-          <div className="bg-gradient-to-r from-blue-900 to-blue-800 p-3 text-white flex items-center justify-between">
+          <div className="bg-gradient-to-r from-blue-950 to-blue-900 p-3 text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-blue-400" />
-              <span className="text-xs font-bold">Aset TIK FTI UKSW</span>
+              <span className="text-xs font-bold">Aset FTI UKSW</span>
             </div>
-            <span className="rounded bg-blue-950/80 px-2 py-0.5 text-xs font-mono font-bold text-blue-200">
+            <span className="rounded bg-blue-900/80 px-2 py-0.5 text-xs font-mono font-bold text-blue-200">
               100%
             </span>
           </div>
@@ -113,7 +113,7 @@ function Dashboard() {
               Aset Baik
             </span>
           </div>
-          <div className="bg-gradient-to-r from-blue-800 to-indigo-900 p-3 text-white flex items-center justify-between">
+          <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-3 text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
               <span className="text-xs font-bold">Kondisi Baik</span>
@@ -148,13 +148,13 @@ function Dashboard() {
         </Card>
       </div>
 
-      {/* Main SIMATIK Table Card (Matching Figma Layout) */}
+      {/* Main SIMAFTI Table Card */}
       <Card className="p-6 border border-slate-200">
         {/* Table Toolbar */}
         <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
             <span className="text-xs font-semibold text-slate-500">Show</span>
-            <select className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-600">
+            <select className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-900">
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -170,7 +170,7 @@ function Dashboard() {
                 placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-48 sm:w-64 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 pl-8 text-xs text-slate-800 placeholder-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600"
+                className="w-48 sm:w-64 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 pl-8 text-xs text-slate-800 placeholder-slate-400 focus:border-blue-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-900"
               />
               <svg className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -228,7 +228,7 @@ function Dashboard() {
                       <div className="flex items-center justify-center gap-1.5">
                         <Link
                           to="/assets"
-                          className="p-1 text-slate-400 hover:text-blue-600 rounded transition-colors"
+                          className="p-1 text-slate-400 hover:text-blue-900 rounded transition-colors"
                           title="Lihat Detail"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -238,7 +238,7 @@ function Dashboard() {
                         </Link>
                         <Link
                           to="/assets"
-                          className="p-1 text-slate-400 hover:text-blue-600 rounded transition-colors"
+                          className="p-1 text-slate-400 hover:text-blue-900 rounded transition-colors"
                           title="Edit"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
