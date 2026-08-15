@@ -126,13 +126,17 @@ function MaintenanceLogs() {
       {/* Header Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white">Riwayat Pemeliharaan</h1>
-            <span className="rounded-full bg-blue-100 dark:bg-blue-950 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-300">
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              Riwayat Pemeliharaan
+            </h1>
+            <span className="rounded-full bg-blue-100 dark:bg-blue-950/80 px-2.5 py-0.5 text-xs font-mono font-bold text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
               {logs.length} Catatan
             </span>
           </div>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Histori dan histori biaya pekerjaan perbaikan aset oleh teknisi FTI UKSW</p>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 font-medium">
+            Histori dan catatan biaya pekerjaan perbaikan aset oleh teknisi FTI UKSW
+          </p>
         </div>
         <Button onClick={openCreate} className="shadow-sm">
           <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,24 +147,24 @@ function MaintenanceLogs() {
       </div>
 
       {/* Table Card */}
-      <Card className="overflow-hidden p-6 space-y-4">
+      <Card className="overflow-hidden p-6 space-y-4 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         {/* Table Toolbar */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Show</span>
+            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Show</span>
             <select
               value={pageSize}
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
+              className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
             >
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
             </select>
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">entries</span>
+            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">entries</span>
           </div>
 
           <div className="relative">
@@ -181,7 +185,7 @@ function MaintenanceLogs() {
         </div>
 
         {loading ? (
-          <div className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">Memuat riwayat pemeliharaan...</div>
+          <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">Memuat riwayat pemeliharaan...</div>
         ) : filteredLogs.length === 0 ? (
           <div className="p-12 text-center">
             <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
@@ -197,45 +201,48 @@ function MaintenanceLogs() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <table className="w-full text-left text-xs">
+              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/90 font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
                 <tr>
-                  <th className="px-6 py-3.5">Tanggal</th>
-                  <th className="px-6 py-3.5">Aset</th>
-                  <th className="px-6 py-3.5">Tindakan Dilakukan</th>
-                  <th className="px-6 py-3.5">Teknisi</th>
-                  <th className="px-6 py-3.5">Biaya (Rp)</th>
-                  <th className="px-6 py-3.5 text-right">Aksi</th>
+                  <th className="px-4 py-3.5">Tanggal</th>
+                  <th className="px-4 py-3.5">Aset Target</th>
+                  <th className="px-4 py-3.5">Tindakan Dilakukan</th>
+                  <th className="px-4 py-3.5">Teknisi</th>
+                  <th className="px-4 py-3.5">Biaya (Rp)</th>
+                  <th className="px-4 py-3.5 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {paginatedLogs.map((logItem) => (
                   <tr key={logItem.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
-                    <td className="px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">
+                    <td className="px-4 py-4 font-mono text-xs text-slate-600 dark:text-slate-300">
                       {logItem.maintenance_date || '-'}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
+                    <td className="px-4 py-4">
+                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
                         {logItem.asset?.asset_code && (
                           <AssetCodeTag code={logItem.asset.asset_code} />
                         )}
-                        <span className="font-semibold text-slate-900 dark:text-white">{logItem.asset?.name || '-'}</span>
+                        <span className="font-bold text-slate-900 dark:text-white">{logItem.asset?.name || '-'}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300 max-w-sm">{logItem.action_taken}</td>
-                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400">
-                      <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:text-slate-300">
-                        👨‍🔧 {logItem.technician?.name || '-'}
+                    <td className="px-4 py-4 text-slate-700 dark:text-slate-200 font-medium leading-relaxed max-w-sm">
+                      {logItem.action_taken}
+                    </td>
+                    <td className="px-4 py-4">
+                      <span className="inline-flex items-center gap-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 text-xs font-semibold text-slate-800 dark:text-slate-200">
+                        <span>👨‍🔧</span>
+                        <span>{logItem.technician?.name || 'Teknisi'}</span>
                       </span>
                     </td>
-                    <td className="px-6 py-4 font-mono text-xs font-semibold text-slate-900 dark:text-white">
+                    <td className="px-4 py-4 font-mono text-xs font-bold text-slate-900 dark:text-white">
                       {logItem.cost ? `Rp ${Number(logItem.cost).toLocaleString('id-ID')}` : '-'}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-4 py-4 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => openEdit(logItem)}
-                          className="p-1.5 text-slate-500 hover:text-blueprint hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                           title="Edit Catatan"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -244,7 +251,7 @@ function MaintenanceLogs() {
                         </button>
                         <button
                           onClick={() => handleDelete(logItem)}
-                          className="p-1.5 text-slate-500 hover:text-rust hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                           title="Hapus Catatan"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
