@@ -4,6 +4,7 @@ import ProtectedRoute from './ProtectedRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import Login from '../pages/Login';
 import AssetCategories from '../pages/AssetCategories';
+import Locations from '../pages/Locations';
 
 function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ function AppRoutes() {
           >
             <Route path="/" element={<div>Dashboard (Coming Soon)</div>} />
             <Route path="/asset-categories" element={<AssetCategories />} />
+            <Route path="/locations" element={<Locations />} />
           </Route>
         </Routes>
       </AuthProvider>
