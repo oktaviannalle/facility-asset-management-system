@@ -5,6 +5,7 @@ import AdminLayout from '../layouts/AdminLayout';
 import Login from '../pages/Login';
 import AssetCategories from '../pages/AssetCategories';
 import Locations from '../pages/Locations';
+import Assets from '../pages/Assets';
 
 function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ function AppRoutes() {
             <Route path="/" element={<div>Dashboard (Coming Soon)</div>} />
             <Route path="/asset-categories" element={<AssetCategories />} />
             <Route path="/locations" element={<Locations />} />
+            <Route path="/assets" element={<Assets />} />
           </Route>
         </Routes>
       </AuthProvider>
