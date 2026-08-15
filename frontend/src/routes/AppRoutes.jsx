@@ -6,6 +6,7 @@ import Login from '../pages/Login';
 import AssetCategories from '../pages/AssetCategories';
 import Locations from '../pages/Locations';
 import Assets from '../pages/Assets';
+import MaintenanceSchedules from '../pages/MaintenanceSchedules';
 
 function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ function AppRoutes() {
             <Route path="/asset-categories" element={<AssetCategories />} />
             <Route path="/locations" element={<Locations />} />
             <Route path="/assets" element={<Assets />} />
+            <Route path="/maintenance-schedules" element={<MaintenanceSchedules />} />
           </Route>
         </Routes>
       </AuthProvider>
