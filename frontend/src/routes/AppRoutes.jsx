@@ -8,6 +8,7 @@ import Locations from '../pages/Locations';
 import Assets from '../pages/Assets';
 import MaintenanceSchedules from '../pages/MaintenanceSchedules';
 import MaintenanceLogs from '../pages/MaintenanceLogs';
+import DamageReports from '../pages/DamageReports';
 
 function AppRoutes() {
   return (
@@ -28,6 +29,7 @@ function AppRoutes() {
             <Route path="/assets" element={<Assets />} />
             <Route path="/maintenance-schedules" element={<MaintenanceSchedules />} />
             <Route path="/maintenance-logs" element={<MaintenanceLogs />} />
+            <Route path="/damage-reports" element={<DamageReports />} />
           </Route>
         </Routes>
       </AuthProvider>
