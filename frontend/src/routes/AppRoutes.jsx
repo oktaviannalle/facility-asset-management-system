@@ -3,6 +3,7 @@ import { AuthProvider } from '../context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import Login from '../pages/Login';
+import Dashboard from '../pages/Dashboard';
 import AssetCategories from '../pages/AssetCategories';
 import Locations from '../pages/Locations';
 import Assets from '../pages/Assets';
@@ -23,7 +24,7 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           >
-            <Route path="/" element={<div>Dashboard (Coming Soon)</div>} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/asset-categories" element={<AssetCategories />} />
             <Route path="/locations" element={<Locations />} />
             <Route path="/assets" element={<Assets />} />

@@ -1,27 +1,48 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "IBM Plex Sans", sans-serif;
-  --font-sans: "IBM Plex Sans", sans-serif;
+  --font-sans: "Plus Jakarta Sans", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Plus Jakarta Sans", "IBM Plex Sans", sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
 
-  --color-ink: #0f2138;
-  --color-ink-light: #17304f;
-  --color-blueprint: #2e6690;
-  --color-blueprint-light: #e8f0f5;
+  --color-ink: #0f172a;
+  --color-ink-light: #1e293b;
+  --color-blueprint: #2563eb;
+  --color-blueprint-hover: #1d4ed8;
+  --color-blueprint-light: #eff6ff;
   --color-steel: #64748b;
-  --color-canvas: #f4f5f1;
-  --color-border: #e2e4de;
-  --color-moss: #3f6b4e;
-  --color-moss-light: #e7f0e9;
-  --color-amber: #b8792f;
-  --color-amber-light: #f6ebdc;
-  --color-rust: #a6412f;
-  --color-rust-light: #f5e6e3;
+  --color-steel-light: #94a3b8;
+  --color-canvas: #f8fafc;
+  --color-border: #e2e8f0;
+
+  --color-moss: #16a34a;
+  --color-moss-light: #f0fdf4;
+  --color-amber: #d97706;
+  --color-amber-light: #fffbeb;
+  --color-rust: #dc2626;
+  --color-rust-light: #fef2f2;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: var(--color-canvas);
   color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

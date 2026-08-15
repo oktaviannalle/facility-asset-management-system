@@ -100,158 +100,202 @@ function Assets() {
   };
 
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold">Data Aset</h1>
-          <p className="text-sm text-steel">Kelola daftar inventaris aset Sarana & Prasarana</p>
+          <div className="flex items-center gap-2">
+            <h1 className="font-display text-2xl font-bold text-slate-900">Data Aset Inventaris</h1>
+            <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
+              {assets.length} Aset
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-slate-500">Kelola daftar seluruh fisik aset Sarana & Prasarana</p>
         </div>
-        <Button onClick={openCreate}>+ Tambah Aset</Button>
+        <Button onClick={openCreate} className="shadow-sm">
+          <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Tambah Aset
+        </Button>
       </div>
 
-      <Card>
+      {/* Table Card */}
+      <Card className="overflow-hidden">
         {loading ? (
-          <p className="p-6 text-sm text-steel">Memuat data...</p>
+          <div className="p-8 text-center text-sm text-slate-500">Memuat data aset...</div>
         ) : assets.length === 0 ? (
-          <div className="p-10 text-center">
-            <p className="text-sm text-steel">Belum ada data aset</p>
+          <div className="p-12 text-center">
+            <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-slate-900">Belum ada aset terdaftar</p>
+            <p className="text-xs text-slate-500 mt-1">Mulai daftarkan aset pertama Anda ke sistem</p>
             <Button onClick={openCreate} className="mt-4">
               + Tambah Aset
             </Button>
           </div>
         ) : (
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-border bg-canvas text-xs uppercase text-steel">
-              <tr>
-                <th className="px-6 py-3">Kode Aset</th>
-                <th className="px-6 py-3">Nama</th>
-                <th className="px-6 py-3">Kategori</th>
-                <th className="px-6 py-3">Lokasi</th>
-                <th className="px-6 py-3">Kondisi</th>
-                <th className="px-6 py-3">Harga Beli</th>
-                <th className="px-6 py-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {assets.map((asset) => (
-                <tr key={asset.id} className="hover:bg-canvas/50">
-                  <td className="px-6 py-4">
-                    <AssetCodeTag code={asset.asset_code} />
-                  </td>
-                  <td className="px-6 py-4 font-medium">{asset.name}</td>
-                  <td className="px-6 py-4 text-steel">{asset.category?.name || '-'}</td>
-                  <td className="px-6 py-4 text-steel">
-                    {asset.location
-                      ? `${asset.location.building}${asset.location.room ? ' - ' + asset.location.room : ''}`
-                      : '-'}
-                  </td>
-                  <td className="px-6 py-4">
-                    <StatusTag value={asset.condition} />
-                  </td>
-                  <td className="px-6 py-4 text-steel font-mono">
-                    {asset.purchase_price
-                      ? `Rp ${Number(asset.purchase_price).toLocaleString('id-ID')}`
-                      : '-'}
-                  </td>
-                  <td className="space-x-2 px-6 py-4">
-                    <button
-                      onClick={() => openEdit(asset)}
-                      className="text-blueprint hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(asset)}
-                      className="text-rust hover:underline"
-                    >
-                      Hapus
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th className="px-6 py-3.5">Kode Aset</th>
+                  <th className="px-6 py-3.5">Nama Aset</th>
+                  <th className="px-6 py-3.5">Kategori</th>
+                  <th className="px-6 py-3.5">Lokasi</th>
+                  <th className="px-6 py-3.5">Kondisi</th>
+                  <th className="px-6 py-3.5">Harga Beli</th>
+                  <th className="px-6 py-3.5 text-right">Aksi</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {assets.map((asset) => (
+                  <tr key={asset.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="px-6 py-4">
+                      <AssetCodeTag code={asset.asset_code} />
+                    </td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">{asset.name}</td>
+                    <td className="px-6 py-4 text-slate-600">
+                      <span className="inline-block rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                        {asset.category?.name || '-'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600">
+                      {asset.location
+                        ? `${asset.location.building}${asset.location.room ? ' - ' + asset.location.room : ''}`
+                        : '-'}
+                    </td>
+                    <td className="px-6 py-4">
+                      <StatusTag value={asset.condition} />
+                    </td>
+                    <td className="px-6 py-4 text-slate-700 font-mono text-xs">
+                      {asset.purchase_price
+                        ? `Rp ${Number(asset.purchase_price).toLocaleString('id-ID')}`
+                        : '-'}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEdit(asset)}
+                          className="p-1.5 text-slate-500 hover:text-blueprint hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          title="Edit Aset"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(asset)}
+                          className="p-1.5 text-slate-500 hover:text-rust hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          title="Hapus Aset"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </Card>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Aset' : 'Tambah Aset'}>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Data Aset' : 'Tambah Aset Baru'}>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Kode Aset"
-            required
-            value={form.asset_code}
-            onChange={(e) => setForm({ ...form, asset_code: e.target.value })}
-            placeholder="misal: AST-001"
-          />
-          <Input
-            label="Nama Aset"
-            required
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-          <label className="block">
-            <span className="mb-1.5 block text-xs font-medium text-steel">Kategori</span>
-            <select
-              className="w-full rounded-md border border-border px-3 py-2 text-sm focus:border-blueprint focus:outline-none"
-              value={form.category_id}
-              onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Kode Aset"
               required
-            >
-              <option value="">Pilih Kategori</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block">
-            <span className="mb-1.5 block text-xs font-medium text-steel">Lokasi</span>
-            <select
-              className="w-full rounded-md border border-border px-3 py-2 text-sm focus:border-blueprint focus:outline-none"
-              value={form.location_id}
-              onChange={(e) => setForm({ ...form, location_id: e.target.value })}
+              value={form.asset_code}
+              onChange={(e) => setForm({ ...form, asset_code: e.target.value })}
+              placeholder="misal: AST-001"
+            />
+            <Input
+              label="Nama Aset"
               required
-            >
-              <option value="">Pilih Lokasi</option>
-              {locations.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.building} {l.floor ? `Lt.${l.floor}` : ''} {l.room ? `R.${l.room}` : ''}
-                </option>
-              ))}
-            </select>
-          </label>
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="misal: Proyektor Epson EB-X400"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">Kategori</span>
+              <select
+                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
+                value={form.category_id}
+                onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+                required
+              >
+                <option value="">Pilih Kategori</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">Lokasi Penempatan</span>
+              <select
+                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
+                value={form.location_id}
+                onChange={(e) => setForm({ ...form, location_id: e.target.value })}
+                required
+              >
+                <option value="">Pilih Lokasi</option>
+                {locations.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.building} {l.floor ? `Lt.${l.floor}` : ''} {l.room ? `R.${l.room}` : ''}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
           <label className="block">
-            <span className="mb-1.5 block text-xs font-medium text-steel">Kondisi</span>
+            <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">Kondisi Aset</span>
             <select
-              className="w-full rounded-md border border-border px-3 py-2 text-sm focus:border-blueprint focus:outline-none"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
               value={form.condition}
               onChange={(e) => setForm({ ...form, condition: e.target.value })}
               required
             >
-              <option value="baik">Baik</option>
-              <option value="rusak_ringan">Rusak Ringan</option>
-              <option value="rusak_berat">Rusak Berat</option>
+              <option value="baik">Baik (Berfungsi Normal)</option>
+              <option value="rusak_ringan">Rusak Ringan (Perlu Servis Minor)</option>
+              <option value="rusak_berat">Rusak Berat (Tidak Berfungsi)</option>
             </select>
           </label>
-          <Input
-            label="Tanggal Pembelian"
-            type="date"
-            value={form.purchase_date}
-            onChange={(e) => setForm({ ...form, purchase_date: e.target.value })}
-          />
-          <Input
-            label="Harga Pembelian (Rp)"
-            type="number"
-            value={form.purchase_price}
-            onChange={(e) => setForm({ ...form, purchase_price: e.target.value })}
-          />
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Tanggal Pembelian"
+              type="date"
+              value={form.purchase_date}
+              onChange={(e) => setForm({ ...form, purchase_date: e.target.value })}
+            />
+            <Input
+              label="Harga Pembelian (Rp)"
+              type="number"
+              value={form.purchase_price}
+              onChange={(e) => setForm({ ...form, purchase_price: e.target.value })}
+              placeholder="0"
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
             <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
               Batal
             </Button>
-            <Button type="submit">Simpan</Button>
+            <Button type="submit">Simpan Data</Button>
           </div>
         </form>
       </Modal>
