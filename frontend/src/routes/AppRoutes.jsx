@@ -7,6 +7,7 @@ import AssetCategories from '../pages/AssetCategories';
 import Locations from '../pages/Locations';
 import Assets from '../pages/Assets';
 import MaintenanceSchedules from '../pages/MaintenanceSchedules';
+import MaintenanceLogs from '../pages/MaintenanceLogs';
 
 function AppRoutes() {
   return (
@@ -26,6 +27,7 @@ function AppRoutes() {
             <Route path="/locations" element={<Locations />} />
             <Route path="/assets" element={<Assets />} />
             <Route path="/maintenance-schedules" element={<MaintenanceSchedules />} />
+            <Route path="/maintenance-logs" element={<MaintenanceLogs />} />
           </Route>
         </Routes>
       </AuthProvider>
