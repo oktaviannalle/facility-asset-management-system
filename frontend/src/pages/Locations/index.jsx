@@ -4,6 +4,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
+import Pagination from '../../components/ui/Pagination';
 
 function Locations() {
   const [locations, setLocations] = useState([]);
@@ -11,6 +12,11 @@ function Locations() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ building: '', floor: '', room: '' });
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchLocations = () => {
     setLoading(true);
@@ -58,18 +64,30 @@ function Locations() {
     fetchLocations();
   };
 
+  const filteredLocations = locations.filter(
+    (loc) =>
+      loc.building.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (loc.room || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredLocations.length / pageSize) || 1;
+  const paginatedLocations = filteredLocations.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <div className="space-y-6">
       {/* Header Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-display text-2xl font-bold text-slate-900">Lokasi Aset</h1>
-            <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
+            <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white">Lokasi Aset</h1>
+            <span className="rounded-full bg-blue-100 dark:bg-blue-950 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-300">
               {locations.length} Lokasi
             </span>
           </div>
-          <p className="mt-1 text-sm text-slate-500">Kelola lokasi gedung, lantai, dan ruangan penempatan aset</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Kelola lokasi gedung, lantai, dan ruangan penempatan aset (Kode 101 - 465 FTI UKSW)</p>
         </div>
         <Button onClick={openCreate} className="shadow-sm">
           <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -80,18 +98,54 @@ function Locations() {
       </div>
 
       {/* Table Card */}
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden p-6 space-y-4">
+        {/* Table Toolbar */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Show</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">entries</span>
+          </div>
+
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search lokasi/ruangan..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-48 sm:w-64 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 pl-8 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-900 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-900"
+            />
+            <svg className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
         {loading ? (
-          <div className="p-8 text-center text-sm text-slate-500">Memuat data lokasi...</div>
-        ) : locations.length === 0 ? (
+          <div className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">Memuat data lokasi...</div>
+        ) : filteredLocations.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
-            <p className="text-sm font-medium text-slate-900">Belum ada lokasi terdaftar</p>
-            <p className="text-xs text-slate-500 mt-1">Tambahkan lokasi gedung/ruangan baru ke sistem</p>
+            <p className="text-sm font-medium text-slate-900 dark:text-white">Belum ada lokasi terdaftar</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Tambahkan lokasi gedung/ruangan baru ke sistem</p>
             <Button onClick={openCreate} className="mt-4">
               + Tambah Lokasi
             </Button>
@@ -99,23 +153,23 @@ function Locations() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <tr>
                   <th className="px-6 py-3.5">Gedung</th>
                   <th className="px-6 py-3.5">Lantai</th>
-                  <th className="px-6 py-3.5">Ruangan</th>
+                  <th className="px-6 py-3.5">Ruangan (Kode FTI)</th>
                   <th className="px-6 py-3.5">Jumlah Aset</th>
                   <th className="px-6 py-3.5 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {locations.map((loc) => (
-                  <tr key={loc.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">{loc.building}</td>
-                    <td className="px-6 py-4 text-slate-600 font-mono">{loc.floor ? `Lantai ${loc.floor}` : '-'}</td>
-                    <td className="px-6 py-4 text-slate-600 font-mono">{loc.room ? `Ruang ${loc.room}` : '-'}</td>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {paginatedLocations.map((loc) => (
+                  <tr key={loc.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">{loc.building}</td>
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-300 font-mono">{loc.floor ? `Lantai ${loc.floor}` : '-'}</td>
+                    <td className="px-6 py-4 text-slate-900 dark:text-white font-bold font-mono">{loc.room || '-'}</td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
+                      <span className="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:text-slate-300">
                         {loc.assets_count ?? 0} Unit
                       </span>
                     </td>
@@ -123,7 +177,7 @@ function Locations() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEdit(loc)}
-                          className="p-1.5 text-slate-500 hover:text-blueprint hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-slate-500 hover:text-blueprint hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-lg transition-colors cursor-pointer"
                           title="Edit Lokasi"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -132,7 +186,7 @@ function Locations() {
                         </button>
                         <button
                           onClick={() => handleDelete(loc)}
-                          className="p-1.5 text-slate-500 hover:text-rust hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-slate-500 hover:text-rust hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-colors cursor-pointer"
                           title="Hapus Lokasi"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -147,6 +201,15 @@ function Locations() {
             </table>
           </div>
         )}
+
+        {/* Pagination Bar */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+          totalItems={filteredLocations.length}
+          pageSize={pageSize}
+        />
       </Card>
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Lokasi' : 'Tambah Lokasi Baru'}>
@@ -156,23 +219,23 @@ function Locations() {
             required
             value={form.building}
             onChange={(e) => setForm({ ...form, building: e.target.value })}
-            placeholder="misal: Gedung A, Gedung FTI, Rektorat"
+            placeholder="misal: Gedung FTI UKSW"
           />
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="Lantai (Opsional)"
+              label="Lantai"
               value={form.floor}
               onChange={(e) => setForm({ ...form, floor: e.target.value })}
-              placeholder="misal: 1, 2, 3"
+              placeholder="misal: 1, 2, 3, 4"
             />
             <Input
-              label="Ruangan (Opsional)"
+              label="Kode Ruangan FTI (101 - 465)"
               value={form.room}
               onChange={(e) => setForm({ ...form, room: e.target.value })}
-              placeholder="misal: Lab Komp 1, R.302"
+              placeholder="misal: R.101 (Lab Networking)"
             />
           </div>
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
               Batal
             </Button>

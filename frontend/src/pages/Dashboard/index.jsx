@@ -8,6 +8,7 @@ import damageReportService from '../../api/damageReportService';
 import Card from '../../components/ui/Card';
 import StatusTag from '../../components/ui/StatusTag';
 import AssetCodeTag from '../../components/ui/AssetCodeTag';
+import Pagination from '../../components/ui/Pagination';
 
 function Dashboard() {
   const { user } = useAuth();
@@ -20,6 +21,10 @@ function Dashboard() {
   const [recentAssets, setRecentAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Pagination & Show Entries states (Max 10 per page by default)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -59,6 +64,12 @@ function Dashboard() {
       a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.asset_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (a.category?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredAssets.length / pageSize) || 1;
+  const paginatedAssets = filteredAssets.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
   );
 
   const goodPercent = stats.totalAssets > 0 ? Math.round((stats.goodCondition / stats.totalAssets) * 100) : 0;
@@ -149,12 +160,19 @@ function Dashboard() {
       </div>
 
       {/* Main SIMAFTI Table Card */}
-      <Card className="p-6 border border-slate-200 dark:border-slate-800">
+      <Card className="p-6 border border-slate-200 dark:border-slate-800 space-y-4">
         {/* Table Toolbar */}
-        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Show</span>
-            <select className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900">
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
+            >
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -169,7 +187,10 @@ function Dashboard() {
                 type="text"
                 placeholder="Search..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="w-48 sm:w-64 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 pl-8 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-900 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-900"
               />
               <svg className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -201,7 +222,7 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredAssets.map((asset) => (
+                {paginatedAssets.map((asset) => (
                   <tr key={asset.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
                     <td className="px-4 py-3.5">
                       <AssetCodeTag code={asset.asset_code} />
@@ -253,6 +274,15 @@ function Dashboard() {
             </table>
           </div>
         )}
+
+        {/* Pagination Bar (Max 10 Items per Page) */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+          totalItems={filteredAssets.length}
+          pageSize={pageSize}
+        />
       </Card>
     </div>
   );

@@ -8,6 +8,7 @@ import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 import StatusTag from '../../components/ui/StatusTag';
 import AssetCodeTag from '../../components/ui/AssetCodeTag';
+import Pagination from '../../components/ui/Pagination';
 
 function Assets() {
   const [assets, setAssets] = useState([]);
@@ -16,6 +17,11 @@ function Assets() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+
+  // Pagination states (Max 10 per page by default)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const initialForm = {
     asset_code: '',
@@ -99,18 +105,31 @@ function Assets() {
     }
   };
 
+  const filteredAssets = assets.filter(
+    (a) =>
+      a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.asset_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (a.category?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredAssets.length / pageSize) || 1;
+  const paginatedAssets = filteredAssets.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <div className="space-y-6">
       {/* Header Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-display text-2xl font-bold text-slate-900">Data Aset Inventaris</h1>
-            <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
+            <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white">Data Aset Inventaris</h1>
+            <span className="rounded-full bg-blue-100 dark:bg-blue-950 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-300">
               {assets.length} Aset
             </span>
           </div>
-          <p className="mt-1 text-sm text-slate-500">Kelola daftar seluruh fisik aset Sarana & Prasarana</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Kelola daftar seluruh fisik aset Sarana & Prasarana FTI UKSW</p>
         </div>
         <Button onClick={openCreate} className="shadow-sm">
           <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,18 +140,55 @@ function Assets() {
       </div>
 
       {/* Table Card */}
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden p-6 space-y-4">
+        {/* Table Toolbar */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Show</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">entries</span>
+          </div>
+
+          {/* Table Search Input */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search aset..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-48 sm:w-64 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 pl-8 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-900 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-900"
+            />
+            <svg className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
         {loading ? (
-          <div className="p-8 text-center text-sm text-slate-500">Memuat data aset...</div>
-        ) : assets.length === 0 ? (
+          <div className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">Memuat data aset...</div>
+        ) : filteredAssets.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
-            <p className="text-sm font-medium text-slate-900">Belum ada aset terdaftar</p>
-            <p className="text-xs text-slate-500 mt-1">Mulai daftarkan aset pertama Anda ke sistem</p>
+            <p className="text-sm font-medium text-slate-900 dark:text-white">Belum ada aset terdaftar</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Mulai daftarkan aset pertama Anda ke sistem</p>
             <Button onClick={openCreate} className="mt-4">
               + Tambah Aset
             </Button>
@@ -140,7 +196,7 @@ function Assets() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <tr>
                   <th className="px-6 py-3.5">Kode Aset</th>
                   <th className="px-6 py-3.5">Nama Aset</th>
@@ -151,19 +207,19 @@ function Assets() {
                   <th className="px-6 py-3.5 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {assets.map((asset) => (
-                  <tr key={asset.id} className="hover:bg-slate-50/80 transition-colors">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {paginatedAssets.map((asset) => (
+                  <tr key={asset.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
                     <td className="px-6 py-4">
                       <AssetCodeTag code={asset.asset_code} />
                     </td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">{asset.name}</td>
-                    <td className="px-6 py-4 text-slate-600">
-                      <span className="inline-block rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">{asset.name}</td>
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-300">
+                      <span className="inline-block rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-700 dark:text-slate-300">
                         {asset.category?.name || '-'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-600">
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-300">
                       {asset.location
                         ? `${asset.location.building}${asset.location.room ? ' - ' + asset.location.room : ''}`
                         : '-'}
@@ -171,7 +227,7 @@ function Assets() {
                     <td className="px-6 py-4">
                       <StatusTag value={asset.condition} />
                     </td>
-                    <td className="px-6 py-4 text-slate-700 font-mono text-xs">
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300 font-mono text-xs">
                       {asset.purchase_price
                         ? `Rp ${Number(asset.purchase_price).toLocaleString('id-ID')}`
                         : '-'}
@@ -180,7 +236,7 @@ function Assets() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEdit(asset)}
-                          className="p-1.5 text-slate-500 hover:text-blueprint hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-slate-500 hover:text-blueprint hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-lg transition-colors cursor-pointer"
                           title="Edit Aset"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -189,7 +245,7 @@ function Assets() {
                         </button>
                         <button
                           onClick={() => handleDelete(asset)}
-                          className="p-1.5 text-slate-500 hover:text-rust hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-slate-500 hover:text-rust hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-colors cursor-pointer"
                           title="Hapus Aset"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,6 +260,15 @@ function Assets() {
             </table>
           </div>
         )}
+
+        {/* Pagination Bar (Max 10 Items per Page) */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+          totalItems={filteredAssets.length}
+          pageSize={pageSize}
+        />
       </Card>
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Data Aset' : 'Tambah Aset Baru'}>
@@ -227,9 +292,9 @@ function Assets() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">Kategori</span>
+              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">Kategori</span>
               <select
-                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
+                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
                 value={form.category_id}
                 onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                 required
@@ -244,9 +309,9 @@ function Assets() {
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">Lokasi Penempatan</span>
+              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">Lokasi Penempatan</span>
               <select
-                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
+                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
                 value={form.location_id}
                 onChange={(e) => setForm({ ...form, location_id: e.target.value })}
                 required
@@ -262,9 +327,9 @@ function Assets() {
           </div>
 
           <label className="block">
-            <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">Kondisi Aset</span>
+            <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">Kondisi Aset</span>
             <select
-              className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white transition-all focus:border-blueprint focus:outline-none focus:ring-2 focus:ring-blueprint/20"
               value={form.condition}
               onChange={(e) => setForm({ ...form, condition: e.target.value })}
               required
@@ -291,7 +356,7 @@ function Assets() {
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
               Batal
             </Button>
