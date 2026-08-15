@@ -5,11 +5,15 @@
   --font-display: "Plus Jakarta Sans", "IBM Plex Sans", sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
 
-  --color-ink: #0f172a;
-  --color-ink-light: #1e293b;
-  --color-blueprint: #2563eb;
-  --color-blueprint-hover: #1d4ed8;
+  --color-navy: #0f172a;
+  --color-navy-dark: #020617;
+  --color-navy-accent: #1e3a8a;
+  --color-navy-light: #1e293b;
+  
+  --color-blueprint: #1d4ed8;
+  --color-blueprint-hover: #1e40af;
   --color-blueprint-light: #eff6ff;
+
   --color-steel: #64748b;
   --color-steel-light: #94a3b8;
   --color-canvas: #f8fafc;
@@ -26,7 +30,7 @@
 body {
   font-family: var(--font-sans);
   background-color: var(--color-canvas);
-  color: var(--color-ink);
+  color: var(--color-navy);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
