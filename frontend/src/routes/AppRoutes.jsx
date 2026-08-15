@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
+import { ThemeProvider } from '../context/ThemeContext';
 import ProtectedRoute from './ProtectedRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import Login from '../pages/Login';
@@ -14,26 +15,28 @@ import DamageReports from '../pages/DamageReports';
 function AppRoutes() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            element={
-              <ProtectedRoute>
-                <AdminLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/asset-categories" element={<AssetCategories />} />
-            <Route path="/locations" element={<Locations />} />
-            <Route path="/assets" element={<Assets />} />
-            <Route path="/maintenance-schedules" element={<MaintenanceSchedules />} />
-            <Route path="/maintenance-logs" element={<MaintenanceLogs />} />
-            <Route path="/damage-reports" element={<DamageReports />} />
-          </Route>
-        </Routes>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/asset-categories" element={<AssetCategories />} />
+              <Route path="/locations" element={<Locations />} />
+              <Route path="/assets" element={<Assets />} />
+              <Route path="/maintenance-schedules" element={<MaintenanceSchedules />} />
+              <Route path="/maintenance-logs" element={<MaintenanceLogs />} />
+              <Route path="/damage-reports" element={<DamageReports />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

@@ -27,7 +27,7 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-slate-100 font-sans">
+    <div className="flex min-h-screen w-full bg-slate-100 dark:bg-slate-950 font-sans">
       {/* Split-Screen Left Side: FTI UKSW Building Photo (Figma Style) */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
         <img
@@ -69,7 +69,7 @@ function Login() {
       </div>
 
       {/* Split-Screen Right Side: Login Form Panel */}
-      <div className="flex flex-1 items-center justify-center p-6 sm:p-12 lg:w-1/2 bg-white">
+      <div className="flex flex-1 items-center justify-center p-6 sm:p-12 lg:w-1/2 bg-white dark:bg-slate-900 transition-colors">
         <div className="w-full max-w-md space-y-8">
           {/* Header Logo & SIMAFTI Branding */}
           <div className="text-center">
@@ -78,13 +78,13 @@ function Login() {
               alt="Logo FTI UKSW"
               className="mx-auto h-20 w-20 object-contain mb-3 drop-shadow-md"
             />
-            <h1 className="font-display text-3xl font-black tracking-tight text-slate-900">
+            <h1 className="font-display text-3xl font-black tracking-tight text-slate-900 dark:text-white">
               SIMAFTI
             </h1>
-            <p className="text-xs font-mono font-bold text-blue-900 tracking-wider uppercase mt-0.5">
-              SIM MANAJEMEN ASET TIK
+            <p className="text-xs font-mono font-bold text-blue-900 dark:text-blue-400 tracking-wider uppercase mt-0.5">
+              SISTEM MANAJEMEN ASET FTI
             </p>
-            <p className="mt-3 text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
               Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
             </p>
           </div>
@@ -111,23 +111,23 @@ function Login() {
 
             {/* Remember Me & Forgot Password Helper */}
             <div className="flex items-center justify-between text-xs">
-              <label className="flex items-center gap-2 cursor-pointer text-slate-600">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-300">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-slate-300 text-blue-900 focus:ring-blue-800 h-4 w-4 cursor-pointer"
+                  className="rounded border-slate-300 dark:border-slate-700 text-blue-900 focus:ring-blue-800 h-4 w-4 cursor-pointer"
                 />
                 <span>Remember me</span>
               </label>
-              <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Silakan hubungi administrator SIMAFTI FTI UKSW untuk reset kata sandi.'); }} className="text-slate-500 hover:text-blue-900 hover:underline font-medium">
+              <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Silakan hubungi administrator SIMAFTI FTI UKSW untuk reset kata sandi.'); }} className="text-slate-500 hover:text-blue-900 dark:text-slate-400 dark:hover:text-blue-400 hover:underline font-medium">
                 Forgot Password?
               </a>
             </div>
 
             {error && (
-              <div className="rounded-xl bg-red-50 border border-red-200 p-3.5 text-xs text-red-700 flex items-center gap-2.5">
-                <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 p-3.5 text-xs text-red-700 dark:text-red-300 flex items-center gap-2.5">
+                <svg className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>{error}</span>
@@ -144,8 +144,8 @@ function Login() {
           </form>
 
           {/* Footer Copyright */}
-          <div className="text-center pt-4 border-t border-slate-100">
-            <p className="text-[11px] text-slate-400 font-medium">
+          <div className="text-center pt-4 border-t border-slate-100 dark:border-slate-800">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
               Fakultas Teknologi Informasi — Universitas Kristen Satya Wacana © 2026
             </p>
           </div>

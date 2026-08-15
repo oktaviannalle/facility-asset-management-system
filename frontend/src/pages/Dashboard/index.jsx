@@ -67,11 +67,11 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Subtitle Banner */}
-      <div className="flex flex-col gap-1 border-b border-slate-200 pb-4">
-        <h1 className="font-display text-xl font-extrabold text-slate-900 tracking-tight">
+      <div className="flex flex-col gap-1 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <h1 className="font-display text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Dashboard Manajemen Aset (SIMAFTI)
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
         </p>
       </div>
@@ -79,14 +79,14 @@ function Dashboard() {
       {/* 3 Metric Cards matching Figma SIMAFTI Style */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         {/* Card 1: Semua Aset */}
-        <Card className="overflow-hidden p-0 border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
-          <div className="p-4 bg-white flex items-center justify-between border-b border-slate-100">
+        <Card className="overflow-hidden p-0 border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-shadow">
+          <div className="p-4 bg-white dark:bg-slate-900 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
             <div>
-              <p className="text-2xl font-black text-slate-900 font-display">
+              <p className="text-2xl font-black text-slate-900 dark:text-white font-display">
                 {loading ? '-' : stats.totalAssets}
               </p>
             </div>
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Semua Aset
             </span>
           </div>
@@ -102,14 +102,14 @@ function Dashboard() {
         </Card>
 
         {/* Card 2: Kondisi Baik */}
-        <Card className="overflow-hidden p-0 border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
-          <div className="p-4 bg-white flex items-center justify-between border-b border-slate-100">
+        <Card className="overflow-hidden p-0 border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-shadow">
+          <div className="p-4 bg-white dark:bg-slate-900 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
             <div>
-              <p className="text-2xl font-black text-slate-900 font-display">
+              <p className="text-2xl font-black text-slate-900 dark:text-white font-display">
                 {loading ? '-' : stats.goodCondition}
               </p>
             </div>
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Aset Baik
             </span>
           </div>
@@ -125,14 +125,14 @@ function Dashboard() {
         </Card>
 
         {/* Card 3: Pemeliharaan */}
-        <Card className="overflow-hidden p-0 border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
-          <div className="p-4 bg-white flex items-center justify-between border-b border-slate-100">
+        <Card className="overflow-hidden p-0 border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-shadow">
+          <div className="p-4 bg-white dark:bg-slate-900 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
             <div>
-              <p className="text-2xl font-black text-slate-900 font-display">
+              <p className="text-2xl font-black text-slate-900 dark:text-white font-display">
                 {loading ? '-' : stats.needMaintenance}
               </p>
             </div>
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Pemeliharaan
             </span>
           </div>
@@ -149,17 +149,17 @@ function Dashboard() {
       </div>
 
       {/* Main SIMAFTI Table Card */}
-      <Card className="p-6 border border-slate-200">
+      <Card className="p-6 border border-slate-200 dark:border-slate-800">
         {/* Table Toolbar */}
-        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4">
+        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold text-slate-500">Show</span>
-            <select className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-900">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Show</span>
+            <select className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900">
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
             </select>
-            <span className="text-xs font-semibold text-slate-500">entries</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">entries</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -170,25 +170,25 @@ function Dashboard() {
                 placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-48 sm:w-64 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 pl-8 text-xs text-slate-800 placeholder-slate-400 focus:border-blue-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-900"
+                className="w-48 sm:w-64 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 pl-8 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-900 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-900"
               />
               <svg className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <span className="text-xs font-mono font-medium text-slate-400">Record History</span>
+            <span className="text-xs font-mono font-medium text-slate-400 dark:text-slate-500">Record History</span>
           </div>
         </div>
 
         {/* Data Table */}
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-500">Memuat data aset...</div>
+          <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">Memuat data aset...</div>
         ) : filteredAssets.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-500">Data aset tidak ditemukan.</div>
+          <div className="p-12 text-center text-xs text-slate-500 dark:text-slate-400">Data aset tidak ditemukan.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-200 bg-slate-50/80 font-bold uppercase tracking-wider text-slate-600">
+              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
                 <tr>
                   <th className="px-4 py-3">No. Seri</th>
                   <th className="px-4 py-3">Nama Barang</th>
@@ -200,25 +200,25 @@ function Dashboard() {
                   <th className="px-4 py-3 text-center">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filteredAssets.map((asset) => (
-                  <tr key={asset.id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={asset.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
                     <td className="px-4 py-3.5">
                       <AssetCodeTag code={asset.asset_code} />
                     </td>
-                    <td className="px-4 py-3.5 font-bold text-slate-900">{asset.name}</td>
-                    <td className="px-4 py-3.5 text-slate-500 font-mono">
+                    <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">{asset.name}</td>
+                    <td className="px-4 py-3.5 text-slate-500 dark:text-slate-400 font-mono">
                       {asset.purchase_date || '-'}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600">
+                    <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300">
                       {asset.location ? `${asset.location.building} ${asset.location.room || ''}` : '-'}
                     </td>
-                    <td className="px-4 py-3.5 font-mono text-slate-800 font-semibold">
+                    <td className="px-4 py-3.5 font-mono text-slate-800 dark:text-slate-200 font-semibold">
                       {asset.purchase_price
                         ? `Rp${Number(asset.purchase_price).toLocaleString('id-ID')}.00`
                         : '-'}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600">
+                    <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300">
                       {asset.category?.name || '-'}
                     </td>
                     <td className="px-4 py-3.5">
@@ -228,7 +228,7 @@ function Dashboard() {
                       <div className="flex items-center justify-center gap-1.5">
                         <Link
                           to="/assets"
-                          className="p-1 text-slate-400 hover:text-blue-900 rounded transition-colors"
+                          className="p-1 text-slate-400 hover:text-blue-900 dark:hover:text-blue-400 rounded transition-colors"
                           title="Lihat Detail"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -238,7 +238,7 @@ function Dashboard() {
                         </Link>
                         <Link
                           to="/assets"
-                          className="p-1 text-slate-400 hover:text-blue-900 rounded transition-colors"
+                          className="p-1 text-slate-400 hover:text-blue-900 dark:hover:text-blue-400 rounded transition-colors"
                           title="Edit"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
