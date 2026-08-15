@@ -1,12 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from '../context/AuthContext';
+import ProtectedRoute from './ProtectedRoute';
+import AdminLayout from '../layouts/AdminLayout';
+import Login from '../pages/Login';
+import AssetCategories from '../pages/AssetCategories';
 
 function AppRoutes() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<div>Halaman Login (Fase 9)</div>} />
-        <Route path="/" element={<div>Dashboard (Fase 9)</div>} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/" element={<div>Dashboard (Coming Soon)</div>} />
+            <Route path="/asset-categories" element={<AssetCategories />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
