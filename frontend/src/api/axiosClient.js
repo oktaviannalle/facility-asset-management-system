@@ -1,7 +1,13 @@
 import axios from "axios";
 
+// Dynamically determine API Base URL based on current browser URL hostname
+const getBaseURL = () => {
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "localhost";
+  return `http://${hostname}:8000/api/v1`;
+};
+
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: getBaseURL(),
   headers: {
     Accept: "application/json",
   },
