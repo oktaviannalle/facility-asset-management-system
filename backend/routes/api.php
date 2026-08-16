@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\AssetController;
 use App\Http\Controllers\Api\V1\MaintenanceScheduleController;
 use App\Http\Controllers\Api\V1\MaintenanceLogController;
 use App\Http\Controllers\Api\V1\DamageReportController;
+use App\Http\Controllers\Api\V1\DashboardController;
 
 Route::prefix('v1')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -16,6 +17,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
+        Route::get('dashboard/stats', [DashboardController::class, 'index']);
 
         Route::apiResource('asset-categories', AssetCategoryController::class)->only(['index', 'show']);
         Route::apiResource('locations', LocationController::class)->only(['index', 'show']);
