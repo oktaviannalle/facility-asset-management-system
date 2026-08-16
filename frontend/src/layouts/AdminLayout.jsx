@@ -239,10 +239,17 @@ function AdminLayout() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header Bar */}
         <header className="hidden lg:flex h-16 items-center justify-between border-b border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 px-8 shadow-xs transition-colors">
-          <div>
-            <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Welcome Back, {user?.name || 'Admin Sarpras'} 👋
-            </h3>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Sesi Aktif:</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-500/20 shadow-[0_0_8px_rgba(16,185,129,0.15)]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                {user?.name || 'Admin Sarpras'}
+              </div>
+            </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
               SIMAFTI — Sistem Manajemen Aset FTI UKSW
             </p>
