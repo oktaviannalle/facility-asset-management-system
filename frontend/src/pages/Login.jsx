@@ -34,7 +34,13 @@ function Login() {
       await login(email, password);
       navigate('/');
     } catch {
-      setError('Gagal login akun demo. Pastikan seeder database aktif.');
+      // Fallback try user@sarpras.test or admin@sarpras.test if custom domain failed
+      try {
+        await login('user@sarpras.test', 'password');
+        navigate('/');
+      } catch {
+        setError('Gagal login akun demo. Pastikan database seeder aktif.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -90,7 +96,7 @@ function Login() {
             <img
               src="/ftiuksw.png"
               alt="Logo FTI UKSW"
-              className="mx-auto h-16 w-16 object-contain mb-2 drop-shadow-md"
+              className="mx-auto h-20 w-20 object-contain mb-3 drop-shadow-md"
             />
             <h1 className="font-display text-3xl font-black tracking-tight text-slate-900 dark:text-white">
               SIMAFTI
@@ -98,53 +104,20 @@ function Login() {
             <p className="text-xs font-mono font-bold text-blue-900 dark:text-blue-400 tracking-wider uppercase mt-0.5">
               SISTEM MANAJEMEN ASET FTI
             </p>
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
+            <p className="mt-2.5 text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
               Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
             </p>
           </div>
 
-          {/* Quick Demo Login Panel */}
-          <div className="rounded-xl border border-blue-100 dark:border-blue-900/60 bg-blue-50/50 dark:bg-blue-950/40 p-3.5 text-center space-y-2.5">
-            <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
-              ⚡ Quick Demo Login (Klik untuk Masuk Instant):
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('admin@fti.uksw.edu', 'password')}
-                className="px-2 py-2 rounded-lg border border-blue-200 dark:border-blue-800 bg-white dark:bg-slate-800 text-blue-900 dark:text-blue-300 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900 transition-all cursor-pointer shadow-2xs"
-                title="Login sebagai Admin Sarpras"
-              >
-                Admin
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('teknisi@fti.uksw.edu', 'password')}
-                className="px-2 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-slate-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-all cursor-pointer shadow-2xs"
-                title="Login sebagai Teknisi Pemeliharaan"
-              >
-                Teknisi
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('user@fti.uksw.edu', 'password')}
-                className="px-2 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all cursor-pointer shadow-2xs"
-                title="Login sebagai User / Civitas Akademika"
-              >
-                User
-              </button>
-            </div>
-          </div>
-
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <Input
               label="Username / Email"
               type="email"
               required
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="admin@fti.uksw.edu"
+              placeholder="user@fti.uksw.edu"
             />
 
             <Input
@@ -153,7 +126,7 @@ function Login() {
               required
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              placeholder="••••••••"
+              placeholder="Input your password account"
             />
 
             {/* Remember Me & Forgot Password Helper */}
@@ -188,12 +161,27 @@ function Login() {
             >
               {submitting ? 'Logging in...' : 'Login'}
             </Button>
+
+            {/* Simple Demo Login Button Below Login Button */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('user@fti.uksw.edu', 'password')}
+                className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+              >
+                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span>Masuk Mode Demo User (Read-Only)</span>
+              </button>
+            </div>
           </form>
 
           {/* Footer Copyright */}
-          <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="text-center pt-4 border-t border-slate-100 dark:border-slate-800">
             <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
-              Fakultas Teknologi Informasi — Universitas Kristen Satya Wacana © 2026
+              Fakultas Teknologi Informasi — Universitas Kristen Satya Wacana © 2023
             </p>
           </div>
         </div>

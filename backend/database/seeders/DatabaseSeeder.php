@@ -9,6 +9,7 @@ use App\Models\MaintenanceSchedule;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,19 +20,31 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->admin()->create(['name' => 'Admin Sarpras', 'email' => 'admin@sarpras.test']);
-        User::factory()->teknisi()->count(3)->create();
-        User::factory()->staff()->count(5)->create();
+        // Seed default demo accounts safely with updateOrCreate
+        User::updateOrCreate(
+            ['email' => 'admin@sarpras.test'],
+            ['name' => 'Admin Sarpras', 'password' => Hash::make('password'), 'role' => 'admin']
+        );
+        User::updateOrCreate(
+            ['email' => 'admin@fti.uksw.edu'],
+            ['name' => 'Admin FTI', 'password' => Hash::make('password'), 'role' => 'admin']
+        );
+        User::updateOrCreate(
+            ['email' => 'teknisi@fti.uksw.edu'],
+            ['name' => 'Teknisi FTI', 'password' => Hash::make('password'), 'role' => 'teknisi']
+        );
+        User::updateOrCreate(
+            ['email' => 'user@fti.uksw.edu'],
+            ['name' => 'Demo User (Read Only)', 'password' => Hash::make('password'), 'role' => 'staff']
+        );
+        User::updateOrCreate(
+            ['email' => 'user@sarpras.test'],
+            ['name' => 'Demo Staff', 'password' => Hash::make('password'), 'role' => 'staff']
+        );
 
         $this->call([
             AssetCategorySeeder::class,
             LocationSeeder::class,
         ]);
-
-        // Generate exactly 20 asset records for FTI UKSW
-        Asset::factory()->count(20)->create();
-        MaintenanceSchedule::factory()->count(10)->create();
-        MaintenanceLog::factory()->count(20)->create();
-        DamageReport::factory()->count(10)->create();
     }
 }

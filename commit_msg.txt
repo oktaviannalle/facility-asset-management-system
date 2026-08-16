@@ -1,0 +1,1 @@
+style: simplify demo login button below login action and update copyright year to 2023
