@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import ScanQRModal from '../components/ScanQRModal';
 
 const NAV_GROUPS = [
   {
@@ -93,6 +94,7 @@ function AdminLayout() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [scanModalOpen, setScanModalOpen] = useState(false);
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -259,6 +261,18 @@ function AdminLayout() {
               </svg>
             </div>
 
+            {/* Scan QR Code Button */}
+            <button
+              onClick={() => setScanModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/80 bg-blue-50 dark:bg-blue-950/60 text-xs font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/80 transition-colors cursor-pointer shadow-2xs"
+              title="Scan QR Code Aset"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+              </svg>
+              <span>Scan QR</span>
+            </button>
+
             {/* Dark/Light Mode Toggle Switcher */}
             <button
               onClick={toggleTheme}
@@ -301,6 +315,9 @@ function AdminLayout() {
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pt-20 lg:pt-8 min-w-0">
           <Outlet />
         </main>
+
+        {/* Global QR Code Scanner Modal */}
+        <ScanQRModal open={scanModalOpen} onClose={() => setScanModalOpen(false)} />
       </div>
     </div>
   );
