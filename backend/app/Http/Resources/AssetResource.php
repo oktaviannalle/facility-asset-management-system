@@ -7,22 +7,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class AssetResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
-{
-    return [
-        'id' => $this->id,
-        'asset_code' => $this->asset_code,
-        'name' => $this->name,
-        'condition' => $this->condition,
-        'purchase_date' => $this->purchase_date,
-        'purchase_price' => $this->purchase_price,
-        'category' => new AssetCategoryResource($this->whenLoaded('category')),
-        'location' => new LocationResource($this->whenLoaded('location')),
-    ];
-}
+    {
+        return [
+            'id' => $this->id,
+            'asset_code' => $this->asset_code,
+            'name' => $this->name,
+            'condition' => $this->condition,
+            'purchase_date' => $this->purchase_date,
+            'purchase_price' => $this->purchase_price,
+            'category' => new AssetCategoryResource($this->whenLoaded('category')),
+            'location' => new LocationResource($this->whenLoaded('location')),
+            'maintenance_logs' => MaintenanceLogResource::collection($this->whenLoaded('maintenanceLogs')),
+            'damage_reports' => DamageReportResource::collection($this->whenLoaded('damageReports')),
+        ];
+    }
 }
