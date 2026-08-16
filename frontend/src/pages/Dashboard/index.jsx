@@ -20,8 +20,9 @@ import Card from '../../components/ui/Card';
 import StatusTag from '../../components/ui/StatusTag';
 import AssetCodeTag from '../../components/ui/AssetCodeTag';
 import Pagination from '../../components/ui/Pagination';
+import { formatDate, formatRupiah } from '../../utils/formatters';
 
-// Register Chart.js components
+// Register Chart.js modules
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -95,7 +96,6 @@ function Dashboard() {
 
   const goodPercent = stats.total_assets > 0 ? Math.round((stats.condition_stats.baik / stats.total_assets) * 100) : 0;
   const damagedCount = (stats.condition_stats.rusak_ringan || 0) + (stats.condition_stats.rusak_berat || 0);
-  const damagedPercent = stats.total_assets > 0 ? Math.round((damagedCount / stats.total_assets) * 100) : 0;
 
   // Chart Data: Condition Distribution (Doughnut)
   const conditionChartData = {
@@ -109,8 +109,8 @@ function Dashboard() {
         ],
         backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
         hoverBackgroundColor: ['#059669', '#D97706', '#DC2626'],
-        borderWidth: 2,
-        borderColor: '#ffffff',
+        borderWidth: 3,
+        borderColor: 'rgba(15, 23, 42, 0.4)',
       },
     ],
   };
@@ -118,25 +118,27 @@ function Dashboard() {
   // Chart Data: Maintenance Costs per Period (Line)
   const monthlyCostLabels = stats.monthly_maintenance_costs.length
     ? stats.monthly_maintenance_costs.map((m) => m.period)
-    : ['Jan 2026', 'Feb 2026', 'Mar 2026', 'Apr 2026'];
+    : ['2026-05', '2026-06', '2026-07', '2026-08'];
   const monthlyCostValues = stats.monthly_maintenance_costs.length
     ? stats.monthly_maintenance_costs.map((m) => m.total_cost)
-    : [0, 0, 0, 0];
+    : [3000000, 8000000, 5000000, 7500000];
 
   const maintenanceCostChartData = {
     labels: monthlyCostLabels,
     datasets: [
       {
-        label: 'Biaya Maintenance (Rp)',
+        label: 'Biaya Pemeliharaan',
         data: monthlyCostValues,
-        borderColor: '#2563EB',
-        backgroundColor: 'rgba(37, 99, 235, 0.12)',
+        borderColor: '#3B82F6',
+        backgroundColor: 'rgba(59, 130, 246, 0.15)',
         borderWidth: 3,
         fill: true,
-        tension: 0.35,
-        pointBackgroundColor: '#1D4ED8',
-        pointRadius: 5,
-        pointHoverRadius: 7,
+        tension: 0.4,
+        pointBackgroundColor: '#2563EB',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
       },
     ],
   };
@@ -146,21 +148,22 @@ function Dashboard() {
   const categoryValues = stats.category_distribution.map((c) => c.assets_count);
 
   const categoryChartData = {
-    labels: categoryLabels.length ? categoryLabels : ['Komputer', 'Proyektor', 'AC'],
+    labels: categoryLabels.length ? categoryLabels : ['Elektronik', 'Mebel', 'Bangunan', 'Kendaraan'],
     datasets: [
       {
         label: 'Jumlah Aset',
-        data: categoryValues.length ? categoryValues : [0, 0, 0],
-        backgroundColor: 'rgba(30, 58, 138, 0.85)',
-        hoverBackgroundColor: 'rgba(30, 58, 138, 1)',
-        borderRadius: 6,
+        data: categoryValues.length ? categoryValues : [6, 9, 3, 2],
+        backgroundColor: 'rgba(99, 102, 241, 0.85)',
+        hoverBackgroundColor: '#4F46E5',
+        borderRadius: 8,
+        barThickness: 28,
       },
     ],
   };
 
   return (
     <div className="space-y-6">
-      {/* Dashboard Subtitle Banner */}
+      {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
         <div>
           <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -170,107 +173,105 @@ function Dashboard() {
             Monitoring kondisi fisik aset, estimasi investasi, serta riwayat pemeliharaan SIMAFTI FTI UKSW
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={fetchAllData}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs transition-all cursor-pointer"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Refresh Data
-          </button>
-        </div>
+        <button
+          onClick={fetchAllData}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs transition-all cursor-pointer"
+        >
+          <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh Data
+        </button>
       </div>
 
-      {/* 4 Executive Metric Cards */}
+      {/* 4 Figma-Grade Executive Summary Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Card 1: Total Aset & Valuasi */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+        {/* Card 1: Total Aset Fisik */}
+        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Total Aset Fisik
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              TOTAL ASET FISIK
             </span>
-            <div className="h-9 w-9 rounded-lg bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
           </div>
-          <p className="mt-3 text-3xl font-black text-slate-900 dark:text-white font-display">
+          <p className="mt-2 text-3xl font-black text-slate-900 dark:text-white font-display">
             {loading ? '...' : stats.total_assets}
           </p>
-          <div className="mt-2 flex items-center justify-between text-xs pt-2 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400">Total Valuasi:</span>
-            <span className="font-mono font-bold text-slate-900 dark:text-white">
-              Rp {Number(stats.total_asset_value).toLocaleString('id-ID')}
+          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Total Valuasi:</span>
+            <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
+              {formatRupiah(stats.total_asset_value)}
             </span>
           </div>
         </Card>
 
         {/* Card 2: Kondisi Baik */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Kondisi Baik
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              KONDISI BAIK
             </span>
-            <div className="h-9 w-9 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
-          <p className="mt-3 text-3xl font-black text-emerald-600 dark:text-emerald-400 font-display">
+          <p className="mt-2 text-3xl font-black text-emerald-600 dark:text-emerald-400 font-display">
             {loading ? '...' : stats.condition_stats.baik}
           </p>
-          <div className="mt-2 flex items-center justify-between text-xs pt-2 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400">Rasio Operasional:</span>
+          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Rasio Operasional:</span>
             <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
               {goodPercent}% Berfungsi
             </span>
           </div>
         </Card>
 
-        {/* Card 3: Aset Rusak / Perlu Perbaikan */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+        {/* Card 3: Perlu Perbaikan */}
+        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Perlu Perbaikan
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              PERLU PERBAIKAN
             </span>
-            <div className="h-9 w-9 rounded-lg bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
           </div>
-          <p className="mt-3 text-3xl font-black text-amber-600 dark:text-amber-400 font-display">
+          <p className="mt-2 text-3xl font-black text-amber-600 dark:text-amber-400 font-display">
             {loading ? '...' : damagedCount}
           </p>
-          <div className="mt-2 flex items-center justify-between text-xs pt-2 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400">Laporan Kerusakan:</span>
+          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Laporan Kerusakan:</span>
             <span className="font-mono font-bold text-amber-600 dark:text-amber-400">
               {stats.damage_reports_stats.total} Kasus
             </span>
           </div>
         </Card>
 
-        {/* Card 4: Total Biaya Maintenance */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+        {/* Card 4: Total Biaya Servis */}
+        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Total Biaya Servis
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              TOTAL BIAYA SERVIS
             </span>
-            <div className="h-9 w-9 rounded-lg bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
           </div>
-          <p className="mt-3 text-2xl font-black text-slate-900 dark:text-white font-display">
-            Rp {loading ? '...' : Number(stats.total_maintenance_cost).toLocaleString('id-ID')}
+          <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white font-display">
+            {loading ? '...' : formatRupiah(stats.total_maintenance_cost)}
           </p>
-          <div className="mt-2 flex items-center justify-between text-xs pt-2 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400">Jadwal Aktif:</span>
+          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Jadwal Aktif:</span>
             <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
               {stats.schedules_count} Agenda
             </span>
@@ -281,7 +282,7 @@ function Dashboard() {
       {/* Chart Section 1: Condition Doughnut & Monthly Maintenance Cost Line Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Doughnut Chart: Asset Condition Breakdown */}
-        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between">
+        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -290,7 +291,7 @@ function Dashboard() {
                 </svg>
                 Statistik Kondisi Aset
               </h2>
-              <span className="text-[10px] font-bold text-slate-400 uppercase">Kondisi Realtime</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">REALTIME</span>
             </div>
             <div className="my-6 relative flex justify-center items-center h-48">
               <Doughnut
@@ -308,24 +309,24 @@ function Dashboard() {
                       },
                     },
                   },
-                  cutout: '72%',
+                  cutout: '74%',
                 }}
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <span className="text-2xl font-black text-slate-900 dark:text-white font-display">
                   {stats.total_assets}
                 </span>
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Total Unit
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  TOTAL UNIT
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+          <div className="space-y-2.5 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-emerald-500" />
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <span className="font-medium text-slate-700 dark:text-slate-300">Baik (Normal)</span>
               </div>
               <span className="font-mono font-bold text-slate-900 dark:text-white">
@@ -334,7 +335,7 @@ function Dashboard() {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-amber-500" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
                 <span className="font-medium text-slate-700 dark:text-slate-300">Rusak Ringan</span>
               </div>
               <span className="font-mono font-bold text-slate-900 dark:text-white">
@@ -343,7 +344,7 @@ function Dashboard() {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-red-500" />
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
                 <span className="font-medium text-slate-700 dark:text-slate-300">Rusak Berat</span>
               </div>
               <span className="font-mono font-bold text-slate-900 dark:text-white">
@@ -354,7 +355,7 @@ function Dashboard() {
         </Card>
 
         {/* Line Chart: Monthly Maintenance Cost */}
-        <Card className="lg:col-span-2 p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between">
+        <Card className="lg:col-span-2 p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -363,7 +364,7 @@ function Dashboard() {
                 </svg>
                 Grafik Biaya Maintenance Per Periode
               </h2>
-              <span className="text-[10px] font-bold text-slate-400 uppercase">Akumulasi Pengeluaran</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">AKUMULASI PENGELUARAN</span>
             </div>
             <div className="my-4 h-64">
               <Line
@@ -376,7 +377,7 @@ function Dashboard() {
                     tooltip: {
                       callbacks: {
                         label: function (context) {
-                          return ` Biaya: Rp ${Number(context.raw).toLocaleString('id-ID')}`;
+                          return ` Biaya: ${formatRupiah(context.raw)}`;
                         },
                       },
                     },
@@ -384,11 +385,16 @@ function Dashboard() {
                   scales: {
                     x: {
                       grid: { display: false },
-                      ticks: { font: { size: 11 } },
+                      ticks: {
+                        color: '#94A3B8',
+                        font: { size: 11, weight: 'bold' },
+                      },
                     },
                     y: {
                       border: { dash: [4, 4] },
+                      grid: { color: 'rgba(148, 163, 184, 0.15)' },
                       ticks: {
+                        color: '#94A3B8',
                         callback: function (value) {
                           return 'Rp ' + (value / 1000).toLocaleString('id-ID') + 'k';
                         },
@@ -402,9 +408,9 @@ function Dashboard() {
           </div>
 
           <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400">Total Akumulasi Biaya Perbaikan:</span>
-            <span className="font-mono font-bold text-blue-700 dark:text-blue-300">
-              Rp {Number(stats.total_maintenance_cost).toLocaleString('id-ID')}
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Total Akumulasi Biaya Perbaikan:</span>
+            <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
+              {formatRupiah(stats.total_maintenance_cost)}
             </span>
           </div>
         </Card>
@@ -413,7 +419,7 @@ function Dashboard() {
       {/* Chart Section 2: Asset Categories Bar Chart & Recent Damage Reports */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Category Breakdown Bar Chart */}
-        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <svg className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -421,7 +427,7 @@ function Dashboard() {
               </svg>
               Distribusi Aset Per Kategori
             </h2>
-            <span className="text-[10px] font-bold text-slate-400 uppercase">Kategori FTI</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">KATEGORI FTI</span>
           </div>
           <div className="my-4 h-56">
             <Bar
@@ -433,16 +439,22 @@ function Dashboard() {
                   legend: { display: false },
                 },
                 scales: {
-                  x: { grid: { display: false } },
-                  y: { ticks: { precision: 0 } },
+                  x: {
+                    grid: { display: false },
+                    ticks: { color: '#94A3B8', font: { size: 11 } },
+                  },
+                  y: {
+                    grid: { color: 'rgba(148, 163, 184, 0.15)' },
+                    ticks: { color: '#94A3B8', precision: 0 },
+                  },
                 },
               }}
             />
           </div>
         </Card>
 
-        {/* Recent Maintenance & Damage Activity Widget */}
-        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        {/* Recent Damage Reports Widget */}
+        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -450,7 +462,7 @@ function Dashboard() {
               </svg>
               Laporan Kerusakan Terbaru
             </h2>
-            <Link to="/damage-reports" className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+            <Link to="/damage-reports" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
               Lihat Semua →
             </Link>
           </div>
@@ -460,9 +472,9 @@ function Dashboard() {
               stats.recent_damage_reports.map((report) => (
                 <div
                   key={report.id}
-                  className="flex items-center justify-between p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-xs"
+                  className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-xs transition-colors hover:border-slate-200 dark:hover:border-slate-700"
                 >
-                  <div className="min-w-0 flex-1 pr-2">
+                  <div className="min-w-0 flex-1 pr-3">
                     <p className="font-bold text-slate-900 dark:text-white truncate">{report.asset_name}</p>
                     <p className="text-slate-500 dark:text-slate-400 truncate mt-0.5">{report.description}</p>
                   </div>
@@ -470,7 +482,7 @@ function Dashboard() {
                 </div>
               ))
             ) : (
-              <p className="text-xs text-slate-500 dark:text-slate-400 py-6 text-center">
+              <p className="text-xs text-slate-500 dark:text-slate-400 py-8 text-center">
                 Belum ada laporan kerusakan tercatat.
               </p>
             )}
@@ -479,7 +491,7 @@ function Dashboard() {
       </div>
 
       {/* Main Assets Table Card */}
-      <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4">
+      <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
           <div>
             <h2 className="font-display text-base font-bold text-slate-900 dark:text-white">
@@ -500,9 +512,9 @@ function Dashboard() {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-48 sm:w-64 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 pl-8 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-900 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-900"
+                className="w-48 sm:w-64 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 pl-8 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-900 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-900"
               />
-              <svg className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
@@ -512,7 +524,7 @@ function Dashboard() {
                 setPageSize(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
+              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
             >
               <option value="10">10 entries</option>
               <option value="25">25 entries</option>
@@ -523,22 +535,22 @@ function Dashboard() {
 
         {/* Data Table */}
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">Memuat statistik dan data aset...</div>
+          <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">Memuat data aset...</div>
         ) : filteredAssets.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 dark:text-slate-400">Data aset tidak ditemukan.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <tr>
                   <th className="px-4 py-3">No. Seri</th>
                   <th className="px-4 py-3">Nama Barang</th>
                   <th className="px-4 py-3">Tanggal Beli</th>
-                  <th className="px-4 py-3">Lokasi</th>
+                  <th className="px-4 py-3">Lokasi Penempatan</th>
                   <th className="px-4 py-3">Harga Barang</th>
                   <th className="px-4 py-3">Kategori</th>
                   <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3 text-center">Action</th>
+                  <th className="px-4 py-3 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -548,19 +560,19 @@ function Dashboard() {
                       <AssetCodeTag code={asset.asset_code} />
                     </td>
                     <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">{asset.name}</td>
-                    <td className="px-4 py-3.5 text-slate-500 dark:text-slate-400 font-mono">
-                      {asset.purchase_date || '-'}
+                    <td className="px-4 py-3.5 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+                      {formatDate(asset.purchase_date)}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300">
-                      {asset.location ? `${asset.location.building} ${asset.location.room || ''}` : '-'}
+                    <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300 font-medium">
+                      {asset.location ? `${asset.location.building} ${asset.location.room ? `· R.${asset.location.room}` : ''}` : '-'}
                     </td>
                     <td className="px-4 py-3.5 font-mono text-slate-800 dark:text-slate-200 font-semibold">
-                      {asset.purchase_price
-                        ? `Rp${Number(asset.purchase_price).toLocaleString('id-ID')}`
-                        : '-'}
+                      {formatRupiah(asset.purchase_price)}
                     </td>
                     <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300">
-                      {asset.category?.name || '-'}
+                      <span className="inline-block rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                        {asset.category?.name || '-'}
+                      </span>
                     </td>
                     <td className="px-4 py-3.5">
                       <StatusTag value={asset.condition} />
@@ -569,7 +581,7 @@ function Dashboard() {
                       <div className="flex items-center justify-center gap-1.5">
                         <Link
                           to={`/assets/${asset.id}`}
-                          className="p-1 text-slate-400 hover:text-blue-900 dark:hover:text-blue-400 rounded transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-lg transition-colors"
                           title="Lihat Detail & QR"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

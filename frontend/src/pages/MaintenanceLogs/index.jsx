@@ -9,6 +9,7 @@ import Input from '../../components/ui/Input';
 import AssetCodeTag from '../../components/ui/AssetCodeTag';
 import Pagination from '../../components/ui/Pagination';
 import { useAuth } from '../../context/AuthContext';
+import { formatDate, formatRupiah } from '../../utils/formatters';
 
 function MaintenanceLogs() {
   const { user } = useAuth();
@@ -216,7 +217,7 @@ function MaintenanceLogs() {
                 {paginatedLogs.map((logItem) => (
                   <tr key={logItem.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
                     <td className="px-4 py-4 font-mono text-xs text-slate-600 dark:text-slate-300">
-                      {logItem.maintenance_date || '-'}
+                      {formatDate(logItem.maintenance_date)}
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
@@ -236,7 +237,7 @@ function MaintenanceLogs() {
                       </span>
                     </td>
                     <td className="px-4 py-4 font-mono text-xs font-bold text-slate-900 dark:text-white">
-                      {logItem.cost ? `Rp ${Number(logItem.cost).toLocaleString('id-ID')}` : '-'}
+                      {formatRupiah(logItem.cost)}
                     </td>
                     <td className="px-4 py-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">

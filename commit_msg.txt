@@ -1,1 +1,1 @@
-style: simplify demo login button below login action and update copyright year to 2023
+style: refactor Dashboard and tables to match Figma benchmark with formatted dates, high contrast charts, and clean Rupiah values

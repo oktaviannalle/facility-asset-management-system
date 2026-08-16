@@ -10,6 +10,7 @@ import Input from "../../components/ui/Input";
 import StatusTag from "../../components/ui/StatusTag";
 import AssetCodeTag from "../../components/ui/AssetCodeTag";
 import Pagination from "../../components/ui/Pagination";
+import { formatRupiah } from "../../utils/formatters";
 
 function Assets() {
   const [assets, setAssets] = useState([]);
@@ -278,9 +279,7 @@ function Assets() {
                       <StatusTag value={asset.condition} />
                     </td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300 font-mono text-xs">
-                      {asset.purchase_price
-                        ? `Rp ${Number(asset.purchase_price).toLocaleString("id-ID")}`
-                        : "-"}
+                      {formatRupiah(asset.purchase_price)}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
