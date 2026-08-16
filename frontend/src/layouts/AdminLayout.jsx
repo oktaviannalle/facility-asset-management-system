@@ -240,11 +240,11 @@ function AdminLayout() {
         {/* Top Header Bar */}
         <header className="hidden lg:flex h-16 items-center justify-between border-b border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 px-8 shadow-xs transition-colors">
           <div>
-            <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 tracking-wide">
-              SIMAFTI — SISTEM MANAJEMEN ASET FTI
+            <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Welcome Back, {user?.name || 'Admin Sarpras'} 👋
             </h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Portal internal untuk pencatatan dan pemantauan aset FTI UKSW
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              SIMAFTI — Sistem Manajemen Aset FTI UKSW
             </p>
           </div>
 

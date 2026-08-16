@@ -1,1 +1,1 @@
-style: refactor Dashboard and tables to match Figma benchmark with formatted dates, high contrast charts, and clean Rupiah values
+style: overhaul dashboard and header layout matching Figma Modern Analytics Dashboard benchmark

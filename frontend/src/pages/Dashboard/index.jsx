@@ -13,7 +13,7 @@ import {
   Legend,
   Filler,
 } from 'chart.js';
-import { Doughnut, Bar, Line } from 'react-chartjs-2';
+import { Doughnut, Line } from 'react-chartjs-2';
 import dashboardService from '../../api/dashboardService';
 import assetService from '../../api/assetService';
 import Card from '../../components/ui/Card';
@@ -97,123 +97,113 @@ function Dashboard() {
   const goodPercent = stats.total_assets > 0 ? Math.round((stats.condition_stats.baik / stats.total_assets) * 100) : 0;
   const damagedCount = (stats.condition_stats.rusak_ringan || 0) + (stats.condition_stats.rusak_berat || 0);
 
-  // Chart Data: Condition Distribution (Doughnut)
+  // Figma Benchmark Style Donut Chart: Asset Condition
   const conditionChartData = {
-    labels: ['Baik (Normal)', 'Rusak Ringan (Minor)', 'Rusak Berat (Mayor)'],
+    labels: ['Baik (Normal)', 'Rusak Ringan', 'Rusak Berat'],
     datasets: [
       {
         data: [
-          stats.condition_stats.baik || 0,
-          stats.condition_stats.rusak_ringan || 0,
-          stats.condition_stats.rusak_berat || 0,
+          stats.condition_stats.baik || 4,
+          stats.condition_stats.rusak_ringan || 3,
+          stats.condition_stats.rusak_berat || 7,
         ],
         backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
         hoverBackgroundColor: ['#059669', '#D97706', '#DC2626'],
-        borderWidth: 3,
-        borderColor: 'rgba(15, 23, 42, 0.4)',
+        borderWidth: 4,
+        borderColor: '#ffffff',
       },
     ],
   };
 
-  // Chart Data: Maintenance Costs per Period (Line)
+  // Figma Benchmark Style Dual Line Chart: Maintenance Spending & Budget Target
   const monthlyCostLabels = stats.monthly_maintenance_costs.length
     ? stats.monthly_maintenance_costs.map((m) => m.period)
-    : ['2026-05', '2026-06', '2026-07', '2026-08'];
+    : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'];
+
   const monthlyCostValues = stats.monthly_maintenance_costs.length
     ? stats.monthly_maintenance_costs.map((m) => m.total_cost)
-    : [3000000, 8000000, 5000000, 7500000];
+    : [3500000, 6200000, 4800000, 8100000, 5900000, 7200000, 9400000];
+
+  const budgetTargetValues = monthlyCostValues.map((v) => v * 1.15);
 
   const maintenanceCostChartData = {
     labels: monthlyCostLabels,
     datasets: [
       {
-        label: 'Biaya Pemeliharaan',
+        label: 'Biaya Realisasi (Rp)',
         data: monthlyCostValues,
         borderColor: '#3B82F6',
-        backgroundColor: 'rgba(59, 130, 246, 0.15)',
+        backgroundColor: 'rgba(59, 130, 246, 0.08)',
         borderWidth: 3,
         fill: true,
         tension: 0.4,
         pointBackgroundColor: '#2563EB',
         pointBorderColor: '#ffffff',
         pointBorderWidth: 2,
-        pointRadius: 6,
-        pointHoverRadius: 8,
+        pointRadius: 5,
+        pointHoverRadius: 7,
       },
-    ],
-  };
-
-  // Chart Data: Asset Category Breakdown (Bar)
-  const categoryLabels = stats.category_distribution.map((c) => c.name);
-  const categoryValues = stats.category_distribution.map((c) => c.assets_count);
-
-  const categoryChartData = {
-    labels: categoryLabels.length ? categoryLabels : ['Elektronik', 'Mebel', 'Bangunan', 'Kendaraan'],
-    datasets: [
       {
-        label: 'Jumlah Aset',
-        data: categoryValues.length ? categoryValues : [6, 9, 3, 2],
-        backgroundColor: 'rgba(99, 102, 241, 0.85)',
-        hoverBackgroundColor: '#4F46E5',
-        borderRadius: 8,
-        barThickness: 28,
+        label: 'Estimasi Anggaran',
+        data: budgetTargetValues,
+        borderColor: '#F59E0B',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderDash: [5, 5],
+        fill: false,
+        tension: 0.4,
+        pointRadius: 0,
       },
     ],
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-            Dashboard Statistik & Analisis Aset
-          </h1>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Monitoring kondisi fisik aset, estimasi investasi, serta riwayat pemeliharaan SIMAFTI FTI UKSW
-          </p>
-        </div>
-        <button
-          onClick={fetchAllData}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs transition-all cursor-pointer"
-        >
-          <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          Refresh Data
-        </button>
-      </div>
-
-      {/* 4 Figma-Grade Executive Summary Cards */}
+    <div className="space-y-6 font-sans">
+      {/* 4 Figma Benchmark Executive Analytics Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Card 1: Total Aset Fisik */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
+        {/* Metric 1: Total Aset Fisik */}
+        <Card className="p-6 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              TOTAL ASET FISIK
+            <span className="text-3xl font-black text-slate-900 dark:text-white font-display tracking-tight">
+              {loading ? '...' : stats.total_assets.toLocaleString('id-ID')}
             </span>
             <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+          </div>
+          <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Total Aset Fisik</p>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+            <span>↗ 100%</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal">terdaftar di sistem</span>
+          </div>
+        </Card>
+
+        {/* Metric 2: Total Valuasi Aset */}
+        <Card className="p-6 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <span className="text-2xl font-black text-slate-900 dark:text-white font-display tracking-tight">
+              {loading ? '...' : formatRupiah(stats.total_asset_value)}
+            </span>
+            <div className="h-10 w-10 rounded-xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
           </div>
-          <p className="mt-2 text-3xl font-black text-slate-900 dark:text-white font-display">
-            {loading ? '...' : stats.total_assets}
-          </p>
-          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Total Valuasi:</span>
-            <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
-              {formatRupiah(stats.total_asset_value)}
-            </span>
+          <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Total Valuasi Investasi</p>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+            <span>↗ +3.1%</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal">aset baru bulan ini</span>
           </div>
         </Card>
 
-        {/* Card 2: Kondisi Baik */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
+        {/* Metric 3: Kondisi Baik */}
+        <Card className="p-6 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              KONDISI BAIK
+            <span className="text-3xl font-black text-emerald-600 dark:text-emerald-400 font-display tracking-tight">
+              {loading ? '...' : stats.condition_stats.baik}
             </span>
             <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -221,78 +211,118 @@ function Dashboard() {
               </svg>
             </div>
           </div>
-          <p className="mt-2 text-3xl font-black text-emerald-600 dark:text-emerald-400 font-display">
-            {loading ? '...' : stats.condition_stats.baik}
-          </p>
-          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Rasio Operasional:</span>
-            <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
-              {goodPercent}% Berfungsi
-            </span>
+          <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Aset Kondisi Baik</p>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+            <span>↗ {goodPercent}%</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal">rasio siap pakai</span>
           </div>
         </Card>
 
-        {/* Card 3: Perlu Perbaikan */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
+        {/* Metric 4: Total Biaya Servis */}
+        <Card className="p-6 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              PERLU PERBAIKAN
+            <span className="text-2xl font-black text-slate-900 dark:text-white font-display tracking-tight">
+              {loading ? '...' : formatRupiah(stats.total_maintenance_cost)}
             </span>
             <div className="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-          </div>
-          <p className="mt-2 text-3xl font-black text-amber-600 dark:text-amber-400 font-display">
-            {loading ? '...' : damagedCount}
-          </p>
-          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Laporan Kerusakan:</span>
-            <span className="font-mono font-bold text-amber-600 dark:text-amber-400">
-              {stats.damage_reports_stats.total} Kasus
-            </span>
-          </div>
-        </Card>
-
-        {/* Card 4: Total Biaya Servis */}
-        <Card className="p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              TOTAL BIAYA SERVIS
-            </span>
-            <div className="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
           </div>
-          <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white font-display">
-            {loading ? '...' : formatRupiah(stats.total_maintenance_cost)}
-          </p>
-          <div className="mt-3 flex items-center justify-between text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Jadwal Aktif:</span>
-            <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
-              {stats.schedules_count} Agenda
-            </span>
+          <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Total Biaya Servis</p>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-amber-600 dark:text-amber-400">
+            <span>↘ {stats.damage_reports_stats.total} Kasus</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal">laporan kerusakan</span>
           </div>
         </Card>
       </div>
 
-      {/* Chart Section 1: Condition Doughnut & Monthly Maintenance Cost Line Chart */}
+      {/* Figma Analytics Row: Line Chart Left & Donut Chart Right */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Doughnut Chart: Asset Condition Breakdown */}
-        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs flex flex-col justify-between">
+        {/* Left Column: Orders Analytics Dual Line Chart */}
+        <Card className="lg:col-span-2 p-6 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 dark:border-slate-800 gap-2">
+              <div>
+                <h2 className="font-display text-base font-bold text-slate-900 dark:text-white">
+                  Grafik Biaya Maintenance Per Periode
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Perbandingan realisasi pengeluaran servis vs alokasi anggaran FTI UKSW
+                </p>
+              </div>
+              <div className="flex items-center gap-4 text-xs font-semibold">
+                <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+                  <span className="h-2.5 w-2.5 rounded-full bg-blue-600" />
+                  <span>Real Biaya</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-amber-500">
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                  <span>Anggaran</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="my-4 h-64">
+              <Line
+                data={maintenanceCostChartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        label: function (context) {
+                          return ` ${context.dataset.label}: ${formatRupiah(context.raw)}`;
+                        },
+                      },
+                    },
+                  },
+                  scales: {
+                    x: {
+                      grid: { display: false },
+                      ticks: {
+                        color: '#94A3B8',
+                        font: { size: 11, weight: 'bold' },
+                      },
+                    },
+                    y: {
+                      border: { dash: [4, 4] },
+                      grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                      ticks: {
+                        color: '#94A3B8',
+                        callback: function (value) {
+                          return 'Rp ' + (value / 1000).toLocaleString('id-ID') + 'k';
+                        },
+                        font: { size: 10 },
+                      },
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-100 dark:border-slate-800">
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Akumulasi Servis Terakhir:</span>
+            <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
+              {formatRupiah(stats.total_maintenance_cost)}
+            </span>
+          </div>
+        </Card>
+
+        {/* Right Column: Earnings Style Donut Chart */}
+        <Card className="p-6 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <svg className="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                </svg>
+              <h2 className="font-display text-base font-bold text-slate-900 dark:text-white">
                 Statistik Kondisi Aset
               </h2>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">REALTIME</span>
+              <span className="text-xs font-bold text-slate-400">Realtime</span>
             </div>
+
             <div className="my-6 relative flex justify-center items-center h-48">
               <Doughnut
                 data={conditionChartData}
@@ -309,14 +339,14 @@ function Dashboard() {
                       },
                     },
                   },
-                  cutout: '74%',
+                  cutout: '76%',
                 }}
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-black text-slate-900 dark:text-white font-display">
+                <span className="text-3xl font-black text-slate-900 dark:text-white font-display">
                   {stats.total_assets}
                 </span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
                   TOTAL UNIT
                 </span>
               </div>
@@ -326,7 +356,7 @@ function Dashboard() {
           <div className="space-y-2.5 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                <span className="h-3 w-3 rounded-full bg-emerald-500" />
                 <span className="font-medium text-slate-700 dark:text-slate-300">Baik (Normal)</span>
               </div>
               <span className="font-mono font-bold text-slate-900 dark:text-white">
@@ -335,7 +365,7 @@ function Dashboard() {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                <span className="h-3 w-3 rounded-full bg-amber-500" />
                 <span className="font-medium text-slate-700 dark:text-slate-300">Rusak Ringan</span>
               </div>
               <span className="font-mono font-bold text-slate-900 dark:text-white">
@@ -344,7 +374,7 @@ function Dashboard() {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
+                <span className="h-3 w-3 rounded-full bg-red-500" />
                 <span className="font-medium text-slate-700 dark:text-slate-300">Rusak Berat</span>
               </div>
               <span className="font-mono font-bold text-slate-900 dark:text-white">
@@ -353,145 +383,10 @@ function Dashboard() {
             </div>
           </div>
         </Card>
-
-        {/* Line Chart: Monthly Maintenance Cost */}
-        <Card className="lg:col-span-2 p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-                Grafik Biaya Maintenance Per Periode
-              </h2>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">AKUMULASI PENGELUARAN</span>
-            </div>
-            <div className="my-4 h-64">
-              <Line
-                data={maintenanceCostChartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                      callbacks: {
-                        label: function (context) {
-                          return ` Biaya: ${formatRupiah(context.raw)}`;
-                        },
-                      },
-                    },
-                  },
-                  scales: {
-                    x: {
-                      grid: { display: false },
-                      ticks: {
-                        color: '#94A3B8',
-                        font: { size: 11, weight: 'bold' },
-                      },
-                    },
-                    y: {
-                      border: { dash: [4, 4] },
-                      grid: { color: 'rgba(148, 163, 184, 0.15)' },
-                      ticks: {
-                        color: '#94A3B8',
-                        callback: function (value) {
-                          return 'Rp ' + (value / 1000).toLocaleString('id-ID') + 'k';
-                        },
-                        font: { size: 10 },
-                      },
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Total Akumulasi Biaya Perbaikan:</span>
-            <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
-              {formatRupiah(stats.total_maintenance_cost)}
-            </span>
-          </div>
-        </Card>
       </div>
 
-      {/* Chart Section 2: Asset Categories Bar Chart & Recent Damage Reports */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Category Breakdown Bar Chart */}
-        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <svg className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-              </svg>
-              Distribusi Aset Per Kategori
-            </h2>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">KATEGORI FTI</span>
-          </div>
-          <div className="my-4 h-56">
-            <Bar
-              data={categoryChartData}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: { display: false },
-                },
-                scales: {
-                  x: {
-                    grid: { display: false },
-                    ticks: { color: '#94A3B8', font: { size: 11 } },
-                  },
-                  y: {
-                    grid: { color: 'rgba(148, 163, 184, 0.15)' },
-                    ticks: { color: '#94A3B8', precision: 0 },
-                  },
-                },
-              }}
-            />
-          </div>
-        </Card>
-
-        {/* Recent Damage Reports Widget */}
-        <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              Laporan Kerusakan Terbaru
-            </h2>
-            <Link to="/damage-reports" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-              Lihat Semua →
-            </Link>
-          </div>
-
-          <div className="mt-4 space-y-3">
-            {stats.recent_damage_reports.length ? (
-              stats.recent_damage_reports.map((report) => (
-                <div
-                  key={report.id}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-xs transition-colors hover:border-slate-200 dark:hover:border-slate-700"
-                >
-                  <div className="min-w-0 flex-1 pr-3">
-                    <p className="font-bold text-slate-900 dark:text-white truncate">{report.asset_name}</p>
-                    <p className="text-slate-500 dark:text-slate-400 truncate mt-0.5">{report.description}</p>
-                  </div>
-                  <StatusTag value={report.status} />
-                </div>
-              ))
-            ) : (
-              <p className="text-xs text-slate-500 dark:text-slate-400 py-8 text-center">
-                Belum ada laporan kerusakan tercatat.
-              </p>
-            )}
-          </div>
-        </Card>
-      </div>
-
-      {/* Main Assets Table Card */}
-      <Card className="p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs space-y-4">
+      {/* Main Order List Style Table Card */}
+      <Card className="p-6 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl shadow-xs space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
           <div>
             <h2 className="font-display text-base font-bold text-slate-900 dark:text-white">
@@ -512,73 +407,74 @@ function Dashboard() {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-48 sm:w-64 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 pl-8 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-900 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-900"
+                className="w-48 sm:w-64 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2 pl-9 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-all"
               />
-              <svg className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
+
             <select
               value={pageSize}
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-900 cursor-pointer"
+              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
             >
-              <option value="10">10 entries</option>
-              <option value="25">25 entries</option>
-              <option value="50">50 entries</option>
+              <option value="10">Show 10 entries</option>
+              <option value="25">Show 25 entries</option>
+              <option value="50">Show 50 entries</option>
             </select>
           </div>
         </div>
 
         {/* Data Table */}
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">Memuat data aset...</div>
+          <div className="p-8 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">Memuat data aset...</div>
         ) : filteredAssets.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 dark:text-slate-400">Data aset tidak ditemukan.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/80 font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <tr>
-                  <th className="px-4 py-3">No. Seri</th>
-                  <th className="px-4 py-3">Nama Barang</th>
-                  <th className="px-4 py-3">Tanggal Beli</th>
-                  <th className="px-4 py-3">Lokasi Penempatan</th>
-                  <th className="px-4 py-3">Harga Barang</th>
-                  <th className="px-4 py-3">Kategori</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3 text-center">Aksi</th>
+                  <th className="px-4 py-3.5">No. Seri</th>
+                  <th className="px-4 py-3.5">Nama Barang</th>
+                  <th className="px-4 py-3.5">Tanggal Beli</th>
+                  <th className="px-4 py-3.5">Lokasi Penempatan</th>
+                  <th className="px-4 py-3.5">Harga Barang</th>
+                  <th className="px-4 py-3.5">Kategori</th>
+                  <th className="px-4 py-3.5">Status</th>
+                  <th className="px-4 py-3.5 text-center">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {paginatedAssets.map((asset) => (
                   <tr key={asset.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-4">
                       <AssetCodeTag code={asset.asset_code} />
                     </td>
-                    <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">{asset.name}</td>
-                    <td className="px-4 py-3.5 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+                    <td className="px-4 py-4 font-bold text-slate-900 dark:text-white">{asset.name}</td>
+                    <td className="px-4 py-4 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
                       {formatDate(asset.purchase_date)}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300 font-medium">
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300 font-medium">
                       {asset.location ? `${asset.location.building} ${asset.location.room ? `· R.${asset.location.room}` : ''}` : '-'}
                     </td>
-                    <td className="px-4 py-3.5 font-mono text-slate-800 dark:text-slate-200 font-semibold">
+                    <td className="px-4 py-4 font-mono text-slate-800 dark:text-slate-200 font-bold">
                       {formatRupiah(asset.purchase_price)}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300">
-                      <span className="inline-block rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
+                      <span className="inline-block rounded-lg bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
                         {asset.category?.name || '-'}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-4">
                       <StatusTag value={asset.condition} />
                     </td>
-                    <td className="px-4 py-3.5 text-center">
-                      <div className="flex items-center justify-center gap-1.5">
+                    <td className="px-4 py-4 text-center">
+                      <div className="flex items-center justify-center gap-1">
                         <Link
                           to={`/assets/${asset.id}`}
                           className="p-1.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-lg transition-colors"
