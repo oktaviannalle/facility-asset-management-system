@@ -194,8 +194,8 @@ function Dashboard() {
           </div>
           <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Total Valuasi Investasi</p>
           <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
-            <span>↗ +3.1%</span>
-            <span className="text-slate-400 dark:text-slate-500 font-normal">aset baru bulan ini</span>
+            <span>✓ {stats.category_distribution?.length || 0} Kategori</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal">total valuasi seluruh aset</span>
           </div>
         </Card>
 

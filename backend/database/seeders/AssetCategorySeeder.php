@@ -17,7 +17,6 @@ class AssetCategorySeeder extends Seeder
             ['name' => 'Elektronik', 'description' => 'AC, komputer, proyektor, dan perangkat elektronik lainnya'],
             ['name' => 'Mebel', 'description' => 'Meja, kursi, lemari, dan perabot lainnya'],
             ['name' => 'Bangunan', 'description' => 'Komponen gedung seperti atap, pintu, jendela'],
-            ['name' => 'Kendaraan', 'description' => 'Kendaraan operasional kampus'],
         ];
 
         foreach ($categories as $category) {
