@@ -182,6 +182,8 @@ function Login() {
           <div className="text-center pt-4 border-t border-slate-100 dark:border-slate-800">
             <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
               Fakultas Teknologi Informasi — Universitas Kristen Satya Wacana © 2023
+              <br />
+              © Oktavian Alle Mahenswa Putra
             </p>
           </div>
         </div>
